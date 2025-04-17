@@ -52,11 +52,13 @@ subset1 <- geneData %>%
   filter(FDR <= 0.01)
 summary(subset1)
 write.table(subset1$GeneSymbol, "Assignments/M16/subset1_gene.txt", sep = "\t", row.names = FALSE, quote = FALSE)
+write.table(subset1, "Assignments/M16/subset1.txt", sep = "\t", row.names = FALSE, quote = FALSE)
 
 
 # Spec 2: Smaller Sample
 subset2 <- geneData %>%
   filter(logFC >= 2.48) %>%
   filter(FDR <= 0.01)
-summary(subset3)
-write.table(subset3$GeneSymbol, "Assignments/M16/subset2_gene.txt", sep = "\t", row.names = FALSE, quote = FALSE)
+summary(subset2)
+write.table(subset2$GeneSymbol, "Assignments/M16/subset2_gene.txt", sep = "\t", row.names = FALSE, quote = FALSE)
+write.table(subset2, "Assignments/M16/subset2.txt", sep = "\t", row.names = FALSE, quote = FALSE)
