@@ -14,7 +14,5 @@ library(RColorBrewer)
 
 
 ## Load Data
-exp_counts <- read.table(file="", sep = "\t", header = T, row.names=1)
-sample_data <- read.table(file="sample_data.txt", sep = "\t", header = T, row.names=1)
-head(exp_counts)
-sample_data
+liver_counts <- read.table(file="Project 1/data/liver_a.s.count.txt", sep = "\t", header = T, row.names=1)
+stomach_counts <- read.table(file="Project 1/data/stomach_3b.s.count.txt", sep = "\t", header = T, row.names=1)

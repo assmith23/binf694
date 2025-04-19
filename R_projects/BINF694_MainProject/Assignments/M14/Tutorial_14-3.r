@@ -18,8 +18,8 @@ library(RColorBrewer)
 
 
 ## Load Data
-exp_counts <- read.table(file="mouse_mammary_counts2.txt", sep = "\t", header = T, row.names=1)
-sample_data <- read.table(file="sample_data.txt", sep = "\t", header = T, row.names=1)
+exp_counts <- read.table(file="Assignments/M14/mouse_mammary_counts2.txt", sep = "\t", header = T, row.names=1)
+sample_data <- read.table(file="Assignments/M14/sample_data.txt", sep = "\t", header = T, row.names=1)
 head(exp_counts)
 sample_data
 
