@@ -1,5 +1,5 @@
 ---
-title: "InterimAnalysis"
+title: "Interim Analysis"
 output: html_document
 ---
 
