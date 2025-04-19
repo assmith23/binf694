@@ -48,7 +48,7 @@ ggplot(cor_df, aes(x = Var1, y = Var2, fill = value)) +
 
 # Spec 1: Larger Sample
 subset1 <- geneData %>%
-  filter(logFC >= 1 & logFC <= 2.48) %>%
+  filter(logFC >= 1 & logFC <= 2.46) %>%
   filter(FDR <= 0.01)
 summary(subset1)
 write.table(subset1$GeneSymbol, "Assignments/M16/subset1_gene.txt", sep = "\t", row.names = FALSE, quote = FALSE)
@@ -57,7 +57,7 @@ write.table(subset1, "Assignments/M16/subset1.txt", sep = "\t", row.names = FALS
 
 # Spec 2: Smaller Sample
 subset2 <- geneData %>%
-  filter(logFC >= 2.48) %>%
+  filter(logFC >= 3) %>%
   filter(FDR <= 0.01)
 summary(subset2)
 write.table(subset2$GeneSymbol, "Assignments/M16/subset2_gene.txt", sep = "\t", row.names = FALSE, quote = FALSE)
