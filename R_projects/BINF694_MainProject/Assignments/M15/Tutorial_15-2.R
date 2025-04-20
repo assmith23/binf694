@@ -15,7 +15,7 @@ library(edgeR)
 
 
 ## Loading and Preparing the Dataset
-cancer_counts <- read.table(file="oral_carcinoma_counts.txt", sep = "\t", header = T)
+cancer_counts <- read.table(file="Assignments/M15/oral_carcinoma_counts.txt", sep = "\t", header = T)
 head(cancer_counts)
 y <- DGEList(counts=cancer_counts[,3:8], genes=cancer_counts[,1:2])
 

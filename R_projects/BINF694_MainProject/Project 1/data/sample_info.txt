@@ -1,0 +1,7 @@
+condition
+liver_a	liver
+liver_c	liver
+liver_d	liver
+stomach_a	stomach
+stomach_3a	stomach
+stomach_3b	stomach

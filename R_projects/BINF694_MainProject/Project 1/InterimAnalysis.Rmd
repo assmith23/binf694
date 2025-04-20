@@ -1,5 +1,62 @@
 ---
-title: "Interim Analysis"
+title: "Stomach vs. Liver Transcriptomic Analysis"
+subtitle: "BINF694 - Interim Report"
+date: "April 22, 2025"
 output: html_document
 ---
 
+# Introduction
+  - Include literature on transcriptomic differences in digestive organs
+
+## Sample Selection
+## Hypothesis
+The liver and stomach will show differentially expressed gene patterns reflecting their specialized filtering functions. The liver will express higher levels of detoxification and metabolic pathway genes; while the stomach will show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes.
+
+
+# Methods
+## Qualitiy Analysis
+## Trimming
+## Mapping
+## Counting
+## Statistical Analysis
+### Heatmap
+### PCA
+### Gene Heatmap
+### Pathway / GO enrichment
+
+
+# Results
+
+
+# Discussion
+
+
+# References
+
+
+
+# -- Outline --
+# Abstract
+
+# Introduction
+## Sample Selection
+## Hypothesis
+
+# Methods
+## Qualitiy Analysis
+## Trimming
+## Mapping
+## Counting
+## Statistical Analysis
+### Heatmap
+### PCA
+### Gene Heatmap
+### Pathway / GO enrichment
+
+# Results
+
+# Discussion
+
+# Conclusion
+
+# References
