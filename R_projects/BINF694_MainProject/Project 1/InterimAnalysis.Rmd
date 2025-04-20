@@ -9,13 +9,22 @@ output: html_document
   - Include literature on transcriptomic differences in digestive organs
 
 ## Sample Selection
+
 ## Hypothesis
 The liver and stomach will show differentially expressed gene patterns reflecting their specialized filtering functions. The liver will express higher levels of detoxification and metabolic pathway genes; while the stomach will show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes.
 
 
 # Methods
-## Qualitiy Analysis
+## Qualitiy Control
+The first step was to perform quality control analysis on the 6 tissue samples using FastQC. The selected samples were analyzed using version 0.11.9 of FastQC.
+#### Liver Tissue Analysis
+Overall the three liver samples analyzed expressed similar results. There were no concerns with the results from samples a and c, however, with sample d there is some concern with the per base quality has there is a large amount of scores below 28, thus leading to a large amount filtered out in the trimming of the samples. There are no apparent patterns when looking at the per tile sequence quality.
+
+#### Stomach Tissue Analysis
+Similar to our liver tissues, there was one sample that has a large amount below 28 result in them being filtered out.
+
 ## Trimming
+After it was determined that we can proceed with further analysis of the provided samples, FastQC was utilized to trim the samples. The samples were filtered on a minimum read length of 40 and a quality score of 28.
 ## Mapping
 ## Counting
 ## Statistical Analysis

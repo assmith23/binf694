@@ -94,24 +94,7 @@ write.table(as.data.frame(res_ordered), file="Project 1/results/liver_vs_stomach
             sep="\t", quote=FALSE)
 
 
-###### Compare Stomach Genes to Liver Sequence
-markers<- intersect(stomach_genes, rownames(count_matrix))
-filtered_counts <- count_matrix[markers, ]
-filtered_counts[is.na(filtered_counts)] <- 0
-filtered_counts[is.infinite(filtered_counts)] <- 0
-row_var <- apply(filtered_counts, 1, var, na.rm=TRUE)
-filtered_counts <- filtered_counts[row_var > 0,]
-
-# Create heatmap
-pheatmap(filtered_counts,
-         scale = "row",
-         cluster_rows = TRUE,
-         cluster_cols = TRUE,
-         show_colnames = FALSE,
-         fontsize_row = 8,
-         annotation_col=data.frame(Tissue=sample_info$condition, row.names=rownames(sample_info)),
-         main = "Gene Expression by Stomach Genes")
-
+###### Compare Selected Genes
 markers<- intersect(gene_list, rownames(count_matrix))
 filtered_counts <- count_matrix[markers, ]
 filtered_counts[is.na(filtered_counts)] <- 0
@@ -137,7 +120,6 @@ filtered_top_counts <- count_matrix[markers, ]
 
 plotMA(res, main="MA Plot: Liver vs Stomach", ylim=c(-10, 10))
 
-
 #### Part 2 Stuff
 
 y <- DGEList(counts = count_matrix, 
@@ -162,6 +144,7 @@ abline
 results_df <- as.data.frame(res)
 colnames(results_df)[colnames(results_df) == "padj"] <- "FDR"
 colnames(results_df)[colnames(results_df) == "log2FoldChange"] <- "logFC"
+summary(results_df)
 markers<- intersect(gene_list, rownames(results_df))
-filtered_results <- results_df[markers, ]
-summary(filtered_results)
+selected_results <- results_df[markers, ]
+summary(selected_results)

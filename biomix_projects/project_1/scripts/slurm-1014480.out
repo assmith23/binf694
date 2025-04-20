@@ -1,0 +1,261 @@
+================================================================================
+JOB STARTED: Sat Apr 19 03:44:35 PM EDT 2025
+NODE: biomix51.dbi.local
+SCRIPT /var/spool/slurm/d/job1014480/slurm_script:
+#!/bin/bash
+#SBATCH --job-name=trimming
+#SBATCH --mem=32G
+#SBATCH --cpus-per-task=16
+
+### SCRIPT TRIMS RAW SEQUENCE DATA
+### SOFTWARE USED: TrimGalore!, cutadapt, FastQC
+
+##JOB LOG HEADER - Puts a copy of this script &  other debugging info in "slurm.out"
+  perl -E 'say"="x80'; echo "JOB STARTED: $(date)"; echo "NODE: $(hostname)"; echo "SCRIPT ${0}:"; cat $0; perl -E 'say"="x80'
+
+## SOFTWARE REQUIREMENTS
+  export PATH=$PATH:/usr/local/FastQC
+
+## PRIMARY VARIABLES - commonly need to change                                                    # TIP: ${HOME} inserts your home directory
+  FASTQ_IN="/home/assmith/project_1/raw_data/liver/liver_c.s.fastq.gz"     # FASTQ FILE LOCATION
+  OUTDIR="/home/assmith/project_1/outfiles/a-mapping"                                               # OUTPUT DIRECTORY
+
+## SECONDARY VARIABLES - rarely need to change
+  MIN_LEN=40            # MINIMUM READ LENGTH TO KEEP
+  MIN_QUAL=28           # MIN QUAL SCORE (PHRED) TO TRIM
+  CPU=4                 # CPU CORES - TG oddly uses 4x this # - make sure #SBATCH requests enough (e.g. 16 for 4)
+
+## COMMAND(s) TO RUN
+  mkdir -p ${OUTDIR}    # MAKE SURE OUTPUT DIRECTORY EXISTS
+  cd ${OUTDIR}          # CHANGE TO OUTPUT DIRECTORY
+
+## Use _TrimGalore!_ to remove low quality sequences and adapters using _cutadapt_
+ # It will also rerun _FastQC_ so you can see how the trimming worked...
+    trim_galore \
+      --length ${MIN_LEN} \
+      --quality ${MIN_QUAL} \
+      --cores ${CPU} \
+      --fastqc \
+      --fastqc_args "--threads ${SLURM_CPUS_PER_TASK}" \
+      ${FASTQ_IN}
+
+## JOB CLEANUP
+  perl -E 'say"="x80'; echo "JOB COMPLETED: $(date)"; perl -E 'say"="x80'
+================================================================================
+Path to Cutadapt set as: 'cutadapt' (default)
+Cutadapt seems to be working fine (tested command 'cutadapt --version')
+Cutadapt version: 4.4
+Cutadapt seems to be using Python 3! Proceeding with multi-core enabled Cutadapt using 4 cores
+pigz 2.7
+Parallel gzip (pigz) detected. Proceeding with multicore (de)compression using 4 cores
+
+Proceeding with 'pigz -p 4' for decompression
+To decrease CPU usage of decompression, please install 'igzip' and run again
+
+No quality encoding type selected. Assuming that the data provided uses Sanger encoded Phred scores (default)
+
+
+
+AUTO-DETECTING ADAPTER TYPE
+===========================
+Attempting to auto-detect adapter type from the first 1 million sequences of the first file (>> /home/assmith/project_1/raw_data/liver/liver_c.s.fastq.gz <<)
+
+Found perfect matches for the following adapter sequences:
+Adapter type	Count	Sequence	Sequences analysed	Percentage
+Illumina	33739	AGATCGGAAGAGC	1000000	3.37
+smallRNA	8	TGGAATTCTCGG	1000000	0.00
+Nextera	1	CTGTCTCTTATA	1000000	0.00
+Using Illumina adapter for trimming (count: 33739). Second best hit was smallRNA (count: 8)
+
+Writing report to 'liver_c.s.fastq.gz_trimming_report.txt'
+
+SUMMARISING RUN PARAMETERS
+==========================
+Input filename: /home/assmith/project_1/raw_data/liver/liver_c.s.fastq.gz
+Trimming mode: single-end
+Trim Galore version: 0.6.10
+Cutadapt version: 4.4
+Python version: 3.10.10
+Number of cores used for trimming: 4
+Quality Phred score cutoff: 28
+Quality encoding type selected: ASCII+33
+Adapter sequence: 'AGATCGGAAGAGC' (Illumina TruSeq, Sanger iPCR; auto-detected)
+Maximum trimming error rate: 0.1 (default)
+Minimum required adapter overlap (stringency): 1 bp
+Minimum required sequence length before a sequence gets removed: 40 bp
+Running FastQC on the data once trimming has completed
+Running FastQC with the following extra arguments: '--threads 16'
+Output file(s) will be GZIP compressed
+
+Cutadapt seems to be fairly up-to-date (version 4.4). Setting -j 4
+Writing final adapter and quality trimmed output to liver_c.s_trimmed.fq.gz
+
+
+  >>> Now performing quality (cutoff '-q 28') and adapter trimming in a single pass for the adapter sequence: 'AGATCGGAAGAGC' from file /home/assmith/project_1/raw_data/liver/liver_c.s.fastq.gz <<< 
+10000000 sequences processed
+This is cutadapt 4.4 with Python 3.10.10
+Command line parameters: -j 4 -e 0.1 -q 28 -O 1 -a AGATCGGAAGAGC /home/assmith/project_1/raw_data/liver/liver_c.s.fastq.gz
+Processing single-end reads on 4 cores ...
+Finished in 111.936 s (9.156 µs/read; 6.55 M reads/minute).
+
+=== Summary ===
+
+Total reads processed:              12,225,037
+Reads with adapters:                 4,399,539 (36.0%)
+Reads written (passing filters):    12,225,037 (100.0%)
+
+Total basepairs processed: 1,234,728,737 bp
+Quality-trimmed:              88,917,516 bp (7.2%)
+Total written (filtered):  1,128,542,273 bp (91.4%)
+
+=== Adapter 1 ===
+
+Sequence: AGATCGGAAGAGC; Type: regular 3'; Length: 13; Trimmed: 4399539 times
+
+Minimum overlap: 1
+No. of allowed errors:
+1-9 bp: 0; 10-13 bp: 1
+
+Bases preceding removed adapters:
+  A: 29.7%
+  C: 30.9%
+  G: 23.5%
+  T: 15.5%
+  none/other: 0.4%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+1	2503823	3056259.2	0	2503823
+2	941226	764064.8	0	941226
+3	239120	191016.2	0	239120
+4	73158	47754.1	0	73158
+5	44727	11938.5	0	44727
+6	41905	2984.6	0	41905
+7	34793	746.2	0	34793
+8	36257	186.5	0	36257
+9	31746	46.6	0	31555 191
+10	35636	11.7	1	35090 546
+11	17967	2.9	1	17657 310
+12	28344	0.7	1	28064 280
+13	19519	0.2	1	19300 219
+14	27467	0.2	1	27182 285
+15	21099	0.2	1	20821 278
+16	17663	0.2	1	17406 257
+17	23030	0.2	1	22695 335
+18	27477	0.2	1	27141 336
+19	11803	0.2	1	11647 156
+20	15457	0.2	1	15288 169
+21	14022	0.2	1	13833 189
+22	13634	0.2	1	13441 193
+23	15368	0.2	1	15139 229
+24	11878	0.2	1	11706 172
+25	14786	0.2	1	14588 198
+26	9171	0.2	1	9019 152
+27	12087	0.2	1	11847 240
+28	11407	0.2	1	11173 234
+29	9307	0.2	1	9097 210
+30	10615	0.2	1	10450 165
+31	5166	0.2	1	5068 98
+32	7303	0.2	1	7204 99
+33	3537	0.2	1	3468 69
+34	5108	0.2	1	4984 124
+35	4526	0.2	1	4409 117
+36	4415	0.2	1	4241 174
+37	3993	0.2	1	3729 264
+38	4480	0.2	1	4312 168
+39	2262	0.2	1	2056 206
+40	2928	0.2	1	2495 433
+41	3294	0.2	1	3006 288
+42	2770	0.2	1	2677 93
+43	604	0.2	1	572 32
+44	465	0.2	1	397 68
+45	1040	0.2	1	891 149
+46	1054	0.2	1	957 97
+47	614	0.2	1	517 97
+48	353	0.2	1	285 68
+49	583	0.2	1	521 62
+50	361	0.2	1	289 72
+51	643	0.2	1	366 277
+52	1307	0.2	1	817 490
+53	1318	0.2	1	1199 119
+54	320	0.2	1	225 95
+55	284	0.2	1	177 107
+56	597	0.2	1	285 312
+57	873	0.2	1	609 264
+58	898	0.2	1	536 362
+59	899	0.2	1	713 186
+60	535	0.2	1	322 213
+61	601	0.2	1	453 148
+62	1225	0.2	1	424 801
+63	2767	0.2	1	1739 1028
+64	1766	0.2	1	1563 203
+65	433	0.2	1	273 160
+66	532	0.2	1	248 284
+67	1173	0.2	1	436 737
+68	2856	0.2	1	1084 1772
+69	6142	0.2	1	2201 3941
+70	3986	0.2	1	3215 771
+71	656	0.2	1	574 82
+72	87	0.2	1	62 25
+73	9	0.2	1	5 4
+74	7	0.2	1	1 6
+75	14	0.2	1	1 13
+76	6	0.2	1	1 5
+77	17	0.2	1	0 17
+78	12	0.2	1	0 12
+79	6	0.2	1	0 6
+80	8	0.2	1	0 8
+81	5	0.2	1	1 4
+82	6	0.2	1	0 6
+83	6	0.2	1	1 5
+84	7	0.2	1	0 7
+85	5	0.2	1	0 5
+86	9	0.2	1	0 9
+87	6	0.2	1	1 5
+88	7	0.2	1	2 5
+89	14	0.2	1	2 12
+90	9	0.2	1	1 8
+91	10	0.2	1	2 8
+92	13	0.2	1	3 10
+93	5	0.2	1	1 4
+94	2	0.2	1	0 2
+95	2	0.2	1	0 2
+96	6	0.2	1	1 5
+97	4	0.2	1	0 4
+98	19	0.2	1	1 18
+99	15	0.2	1	2 13
+100	13	0.2	1	5 8
+101	51	0.2	1	10 41
+
+RUN STATISTICS FOR INPUT FILE: /home/assmith/project_1/raw_data/liver/liver_c.s.fastq.gz
+=============================================
+12225037 sequences processed in total
+Sequences removed because they became shorter than the length cutoff of 40 bp:	410753 (3.4%)
+
+
+  >>> Now running FastQC on the data <<<
+
+Started analysis of liver_c.s_trimmed.fq.gz
+Approx 5% complete for liver_c.s_trimmed.fq.gz
+Approx 10% complete for liver_c.s_trimmed.fq.gz
+Approx 15% complete for liver_c.s_trimmed.fq.gz
+Approx 20% complete for liver_c.s_trimmed.fq.gz
+Approx 25% complete for liver_c.s_trimmed.fq.gz
+Approx 30% complete for liver_c.s_trimmed.fq.gz
+Approx 35% complete for liver_c.s_trimmed.fq.gz
+Approx 40% complete for liver_c.s_trimmed.fq.gz
+Approx 45% complete for liver_c.s_trimmed.fq.gz
+Approx 50% complete for liver_c.s_trimmed.fq.gz
+Approx 55% complete for liver_c.s_trimmed.fq.gz
+Approx 60% complete for liver_c.s_trimmed.fq.gz
+Approx 65% complete for liver_c.s_trimmed.fq.gz
+Approx 70% complete for liver_c.s_trimmed.fq.gz
+Approx 75% complete for liver_c.s_trimmed.fq.gz
+Approx 80% complete for liver_c.s_trimmed.fq.gz
+Approx 85% complete for liver_c.s_trimmed.fq.gz
+Approx 90% complete for liver_c.s_trimmed.fq.gz
+Approx 95% complete for liver_c.s_trimmed.fq.gz
+Analysis complete for liver_c.s_trimmed.fq.gz
+================================================================================
+JOB COMPLETED: Sat Apr 19 03:47:50 PM EDT 2025
+================================================================================

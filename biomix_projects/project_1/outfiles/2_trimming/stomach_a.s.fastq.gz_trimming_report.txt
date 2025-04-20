@@ -1,0 +1,160 @@
+
+SUMMARISING RUN PARAMETERS
+==========================
+Input filename: /home/assmith/project_1/raw_data/stomach/stomach_a.s.fastq.gz
+Trimming mode: single-end
+Trim Galore version: 0.6.10
+Cutadapt version: 4.4
+Python version: 3.10.10
+Number of cores used for trimming: 4
+Quality Phred score cutoff: 28
+Quality encoding type selected: ASCII+33
+Using Illumina adapter for trimming (count: 55696). Second best hit was Nextera (count: 12)
+Adapter sequence: 'AGATCGGAAGAGC' (Illumina TruSeq, Sanger iPCR; auto-detected)
+Maximum trimming error rate: 0.1 (default)
+Minimum required adapter overlap (stringency): 1 bp
+Minimum required sequence length before a sequence gets removed: 40 bp
+Running FastQC on the data once trimming has completed
+Running FastQC with the following extra arguments: --threads 16
+Output file will be GZIP compressed
+
+
+This is cutadapt 4.4 with Python 3.10.10
+Command line parameters: -j 4 -e 0.1 -q 28 -O 1 -a AGATCGGAAGAGC /home/assmith/project_1/raw_data/stomach/stomach_a.s.fastq.gz
+Processing single-end reads on 4 cores ...
+Finished in 143.499 s (7.175 µs/read; 8.36 M reads/minute).
+
+=== Summary ===
+
+Total reads processed:              20,000,000
+Reads with adapters:                 7,477,954 (37.4%)
+Reads written (passing filters):    20,000,000 (100.0%)
+
+Total basepairs processed: 2,020,000,000 bp
+Quality-trimmed:             334,848,083 bp (16.6%)
+Total written (filtered):  1,642,212,814 bp (81.3%)
+
+=== Adapter 1 ===
+
+Sequence: AGATCGGAAGAGC; Type: regular 3'; Length: 13; Trimmed: 7477954 times
+
+Minimum overlap: 1
+No. of allowed errors:
+1-9 bp: 0; 10-13 bp: 1
+
+Bases preceding removed adapters:
+  A: 27.9%
+  C: 31.2%
+  G: 23.9%
+  T: 14.4%
+  none/other: 2.5%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+1	3728081	5000000.0	0	3728081
+2	1539948	1250000.0	0	1539948
+3	368500	312500.0	0	368500
+4	149623	78125.0	0	149623
+5	83249	19531.2	0	83249
+6	122363	4882.8	0	122363
+7	60218	1220.7	0	60218
+8	109943	305.2	0	109943
+9	91844	76.3	0	91088 756
+10	76690	19.1	1	74581 2109
+11	57732	4.8	1	56157 1575
+12	75230	1.2	1	73491 1739
+13	31560	0.3	1	30332 1228
+14	66300	0.3	1	64540 1760
+15	45992	0.3	1	44558 1434
+16	50147	0.3	1	48018 2129
+17	53302	0.3	1	50939 2363
+18	68098	0.3	1	65758 2340
+19	22602	0.3	1	21539 1063
+20	32082	0.3	1	30500 1582
+21	35136	0.3	1	33447 1689
+22	23528	0.3	1	22476 1052
+23	43804	0.3	1	41852 1952
+24	30953	0.3	1	29135 1818
+25	38335	0.3	1	36424 1911
+26	22918	0.3	1	21259 1659
+27	34428	0.3	1	30354 4074
+28	28200	0.3	1	21326 6874
+29	34407	0.3	1	25153 9254
+30	40943	0.3	1	32660 8283
+31	20860	0.3	1	16796 4064
+32	9427	0.3	1	6090 3337
+33	16036	0.3	1	11393 4643
+34	11482	0.3	1	8055 3427
+35	13568	0.3	1	10228 3340
+36	9670	0.3	1	7070 2600
+37	8411	0.3	1	6193 2218
+38	10225	0.3	1	5354 4871
+39	21801	0.3	1	10186 11615
+40	27383	0.3	1	9707 17676
+41	21110	0.3	1	13877 7233
+42	5510	0.3	1	4084 1426
+43	2093	0.3	1	1394 699
+44	5732	0.3	1	686 5046
+45	10576	0.3	1	2435 8141
+46	5321	0.3	1	2488 2833
+47	3143	0.3	1	1062 2081
+48	2913	0.3	1	701 2212
+49	2660	0.3	1	1321 1339
+50	1683	0.3	1	582 1101
+51	7160	0.3	1	950 6210
+52	10078	0.3	1	1611 8467
+53	3002	0.3	1	1917 1085
+54	1527	0.3	1	292 1235
+55	1263	0.3	1	215 1048
+56	3320	0.3	1	399 2921
+57	3259	0.3	1	510 2749
+58	5311	0.3	1	445 4866
+59	2529	0.3	1	885 1644
+60	2505	0.3	1	300 2205
+61	1860	0.3	1	296 1564
+62	8560	0.3	1	415 8145
+63	9287	0.3	1	1208 8079
+64	2818	0.3	1	1002 1816
+65	1743	0.3	1	308 1435
+66	2269	0.3	1	264 2005
+67	6812	0.3	1	362 6450
+68	10086	0.3	1	941 9145
+69	14339	0.3	1	1186 13153
+70	3221	0.3	1	1246 1975
+71	647	0.3	1	239 408
+72	140	0.3	1	39 101
+73	26	0.3	1	2 24
+74	8	0.3	1	0 8
+75	16	0.3	1	3 13
+76	15	0.3	1	4 11
+77	5	0.3	1	1 4
+78	5	0.3	1	0 5
+79	7	0.3	1	0 7
+80	10	0.3	1	0 10
+81	12	0.3	1	0 12
+82	10	0.3	1	2 8
+83	11	0.3	1	1 10
+84	9	0.3	1	1 8
+85	7	0.3	1	0 7
+86	4	0.3	1	0 4
+87	12	0.3	1	0 12
+88	9	0.3	1	0 9
+89	5	0.3	1	1 4
+90	7	0.3	1	0 7
+91	11	0.3	1	0 11
+92	6	0.3	1	0 6
+93	11	0.3	1	1 10
+94	8	0.3	1	0 8
+95	10	0.3	1	1 9
+96	4	0.3	1	0 4
+97	10	0.3	1	0 10
+98	25	0.3	1	2 23
+99	14	0.3	1	1 13
+100	44	0.3	1	1 43
+101	137	0.3	1	4 133
+
+RUN STATISTICS FOR INPUT FILE: /home/assmith/project_1/raw_data/stomach/stomach_a.s.fastq.gz
+=============================================
+20000000 sequences processed in total
+Sequences removed because they became shorter than the length cutoff of 40 bp:	2071554 (10.4%)
+

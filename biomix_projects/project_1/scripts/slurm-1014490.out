@@ -1,0 +1,64 @@
+================================================================================
+JOB STARTED: Sat Apr 19 04:06:44 PM EDT 2025
+NODE: biomix14.dbi.local
+SCRIPT /var/spool/slurm/d/job1014490/slurm_script:
+#!/bin/bash
+#SBATCH --job-name=mapping
+#SBATCH --mem=48G
+#SBATCH --cpus-per-task=16
+
+### SCRIPT MAPS TRIMMED READS TO A REFERENCE GENOME
+### SOFTWARE USED: STAR, samtools
+
+##JOB LOG HEADER - Puts a copy of this script & other debugging info in "slurm.out"
+  perl -E 'say"="x80'; echo "JOB STARTED: $(date)"; echo "NODE: $(hostname)"; echo "SCRIPT ${0}:"; cat $0; perl -E 'say"="x80'
+
+## SOFTWARE REQUIREMENTS
+  ulimit -n 4000                                                        # ALLOWS 4000 FILES OPEN AT ONCE - STAR USES MANY TEMP FILES
+
+## PRIMARY VARIABLES                                                              # TIP: '${HOME}' inserts your home directory in a path
+  FASTQ_IN="/home/assmith/project_1/outfiles/a-trimming/liver_d.s_trimmed.fq.gz"  # INPUT FASTQ FILE
+  OUTDIR="/home/assmith/project_1/outfiles/b-mapping"                                # OUTPUT DIRECTORY
+
+## SECONDARY VARIABLES (Typically no need to modify)                    # TIP: '${SLURM_CPUS_PER_TASK}' matches '#SBATCH --cpus-per-task'
+  CPU="${SLURM_CPUS_PER_TASK}"                                          # NUMBER OF CPUS TO USE
+  GENOME="/work/binf-courses/binf694/project_1/reference/human-STAR/GRCh38.p14-ensembl/"     # DIRECTORY FOR GENOME FILES
+  IN_PREFIX="$(basename -s '_trimmed.fq.gz' ${FASTQ_IN})"               # IDENTIFIES THE FILE PREFIX - Assumes TrimGalore filename
+  OUT_PREFIX="${OUTDIR}/${IN_PREFIX}."                                  # OUTPUT FILE DIRECTORY AND FILE PREFIX
+  BAM_OUT=${OUT_PREFIX}Aligned.sortedByCoord.out.bam                    # THIS WILL BE NAME OF ALIGNED BAM FILE
+  TMPDIR="/scratch/${USER}/tmp_${SLURM_JOB_ID}"                         # DIRECTORY FOR TEMPORARY FILES
+                                                                        # TIP: '${USER}' inserts your username
+                                                                        #      '${SLURM_JOB_ID}' inserts the job #
+## COMMANDs TO RUN
+  mkdir -p ${OUTDIR}                                                    # CREATE OUTPUT DIRECTORY
+  cd ${OUTDIR}                                                          # CHANGE TO OUTPUT DIRECTORY
+  mkdir -p /scratch/${USER}                                             # CREATE TEMP DIRECTORY
+
+  # Use _STAR_ to align sequences to genome
+    STAR \
+      --genomeDir ${GENOME} \
+      --readFilesIn ${FASTQ_IN} \
+      --readFilesCommand zcat \
+      --outSAMtype BAM SortedByCoordinate \
+      --outSAMunmapped Within \
+      --outTmpDir ${TMPDIR} \
+      --outFileNamePrefix ${OUT_PREFIX} \
+      --runThreadN ${CPU}
+
+ # Use _samtools_ to make an index (bai) of the bam file so we can view it later in IGV
+   samtools index --threads ${CPU} ${BAM_OUT}
+
+## CLEANUP
+  perl -E 'say"="x80'; echo "JOB COMPLETED: $(date)"; perl -E 'say"="x80'
+================================================================================
+	STAR --genomeDir /work/binf-courses/binf694/project_1/reference/human-STAR/GRCh38.p14-ensembl/ --readFilesIn /home/assmith/project_1/outfiles/a-trimming/liver_d.s_trimmed.fq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --outSAMunmapped Within --outTmpDir /scratch/assmith/tmp_1014490 --outFileNamePrefix /home/assmith/project_1/outfiles/b-mapping/liver_d.s. --runThreadN 16
+	STAR version: 2.7.11b   compiled: 2024-01-25T16:12:02-05:00 :/home/dobin/data/STAR/STARcode/STAR.master/source
+Apr 19 16:06:44 ..... started STAR run
+Apr 19 16:06:44 ..... loading genome
+Apr 19 16:07:14 ..... started mapping
+Apr 19 16:08:22 ..... finished mapping
+Apr 19 16:08:25 ..... started sorting BAM
+Apr 19 16:08:47 ..... finished successfully
+================================================================================
+JOB COMPLETED: Sat Apr 19 04:08:53 PM EDT 2025
+================================================================================
