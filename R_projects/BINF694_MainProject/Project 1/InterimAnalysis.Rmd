@@ -5,6 +5,11 @@ date: "April 22, 2025"
 output: html_document
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+```
+
 # Introduction
   - Include literature on transcriptomic differences in digestive organs
 
@@ -15,24 +20,90 @@ The liver and stomach will show differentially expressed gene patterns reflectin
 
 
 # Methods
+Three biological replicates each of human liver (samples a, c, and d) and stomach (samples 1a, 2a, and 3b) tissues were selected for comparative transcriptomic analysis. The analysis aimed to test the hypothesis that liver and stomach tissues would show differentially expressed gene patterns reflecting their specialized filtering functions, with the liver expressing higher levels of detoxification and metabolic pathway genes, while the stomach would show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes.
+
+Claude 3.7 Sonnet[https://claude.ai/share/5142901c-bf60-4d6b-a944-a95c549ac000]
+
 ## Qualitiy Control
-The first step was to perform quality control analysis on the 6 tissue samples using FastQC. The selected samples were analyzed using version 0.11.9 of FastQC.
+The first step was to perform quality control analysis on the 6 tissue samples using FastQC. The selected samples were analyzed using version 0.11.9 of FastQC. Quality metrics including per base sequence quality, per sequence quality scores, sequence duplication levels, adapter content, and k-mer content were evaluated.
+
 #### Liver Tissue Analysis
-Overall the three liver samples analyzed expressed similar results. There were no concerns with the results from samples a and c, however, with sample d there is some concern with the per base quality has there is a large amount of scores below 28, thus leading to a large amount filtered out in the trimming of the samples. There are no apparent patterns when looking at the per tile sequence quality.
+Overall the three liver samples analyzed expressed similar results. There were no concerns with the results from samples a and c, however, with sample d there is some concern with a substantial proportion of bases had quality scores below 28, which led to higher filtering rates during trimming.
 
 #### Stomach Tissue Analysis
-Similar to our liver tissues, there was one sample that has a large amount below 28 result in them being filtered out.
+Similar to the liver tissues, two stomach samples (1a and 2a) showed satisfactory quality metrics. Sample 3b exhibited quality concerns with a larger proportion of bases below quality score 28, resulting in more aggressive filtering during trimming.
+
 
 ## Trimming
-After it was determined that we can proceed with further analysis of the provided samples, FastQC was utilized to trim the samples. The samples were filtered on a minimum read length of 40 and a quality score of 28.
-## Mapping
-## Counting
-## Statistical Analysis
-### Heatmap
-### PCA
-### Gene Heatmap
-### Pathway / GO enrichment
+```{r trimmingData, echo=FALSE}
+trim_df <- read.csv("~/Documents/binf694/R_projects/BINF694_MainProject/Project 1/data/trimming_results.csv", header=TRUE)
+kable(trim_df, caption = "Trimming Results")
+```
+After it was determined that we can proceed with further analysis of the provided samples, FastQC was utilized to trim the samples. The samples were filtered on a minimum read length of 40 and a quality score of 28. This will allow us to retain the sequences meeting our quality threshold.
 
+As expected, liver_d and stomach_3b had the highest proportion of sequences filtered out during this step, consistent with their lower initial quality metrics.
+
+## Mapping
+```{r mappingData, echo=FALSE}
+map_df <- read.csv("~/Documents/binf694/R_projects/BINF694_MainProject/Project 1/data/mapping_results.csv", header=TRUE)
+kable(map_df, caption = "Mapping 8Results")
+```
+Using the filtered sequences, STAR version 2.7.11b was utilized to align the sequences in the genome. The results from the mapping were not concerning. Overall, there was a higher mismatch rate for the stomach tissue samples. The may also be some quality issues with stomach_3b as the mapping rate of about 77.5% is pretty low. This may indicate some contamination in the sample as well as the multi mapping rate was much higher than the other tissue samples.
+
+SAMtools version 1.19.2 was then used to create the .bam files that will be used for counting.
+
+## Genome Visulization
+Integrative Genomics Viewer (IGV) version 2.8.0 was used to visualize read alignments for genes of interest, allowing for inspection of exon coverage patterns and verification of expression differences between liver and stomach tissues.
+
+## Read Counting
+HTSeq version 0.11.2 was used to count the 6 sorted and aligned .bam file provided by trimming and mapping.
+
+**Paramaters:**
+```
+mode intersection-nonempty
+stranded no
+format bam
+type exon
+idattr gene_name
+```
+
+## Differential Expression Analysis
+Differential expression analysis was performed using DESeq2 version 1.38.0 in R version 4.2.0.
+1. Via a created count matrix from the six tissue counts, a DESeqDataSet object was created
+2. Low-count genes (those with fewer than 10 reads across all samples) were filtered out
+3. Results were ordered by adjusted p-value and exported to a tab-delimited file
+
+## Understanding Sample Relationships
+- Principal Component Analysis (PCA) on variance-stabilized transformed data (vst) from DESeq2
+- Sample distance matrix visualized as a heatmap with hierarchical clustering
+- Multi-Dimensional Scaling (MDS) plot from edgeR to assess sample relationships
+- Heatmaps of the top 50 differentially expressed genes across all samples
+- MA plots to show the relationship between mean expression and log2 fold change
+- Smear plots from edgeR to visualize differentially expressed genes
+
+Additionally, selected marker genes from various research publications were analyzed separately and visualized in a heatmap with row-based scaling to highlight expression patterns.
+
+
+## Functional Analysis
+**DAVID (Database for Annotation, Visualization and Integrated Discovery) version 6.8**
+
+- Functional annotation
+
+- Ontology
+  - Biological process
+  - molecular function
+  - cellular component
+
+- KEGG pathways
+
+**Enrichr**
+
+- GO Biological
+- KEGG 2021 Human
+- WikiPathways 2023 Human
+
+
+NOT DONE!
 
 # Results
 
@@ -41,6 +112,7 @@ After it was determined that we can proceed with further analysis of the provide
 
 
 # References
+
 
 
 

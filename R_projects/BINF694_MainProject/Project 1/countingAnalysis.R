@@ -2,7 +2,7 @@
 # *  A Manning Smith
 # *  04/12/2025
 # *  Interim Analysis Working Doc
-# *
+# *  Working end-2-end
 # *
 # *
 # *************************************
@@ -12,6 +12,10 @@ library(DESeq2)
 library(pheatmap)
 library(RColorBrewer)
 library(ggplot2)
+library(readxl)
+library(tibble)
+library(edgeR)
+
 
 
 ## Load Count Data
@@ -28,11 +32,14 @@ names(stomach_a_counts)[1] <- "count"
 names(stomach_3b_counts)[1] <- "count"
 names(stomach_3a_counts)[1] <- "count"
 
+
 ## Load Sample Info
-sample_info <- read.table(file="Project 1/data/sample_info.txt", sep = "\t", header = T, row.names=1)
+sample_info <- read_excel("Project 1/data/masterData.xlsx", sheet = "sample_info")
+sample_info <- sample_info[, 1:2] 
+sample_info <- column_to_rownames(sample_info, var = colnames(sample_info)[1])
 
 ## Load Gene Info
-gene_info <- read.table(file="Project 1/data/selectedGene_info.csv", sep = ",", header = T)
+gene_info <- read_excel("Project 1/data/masterData.xlsx", sheet = "gene_info")
 gene_list <- gene_info$gene ## Combine Gene Lists
 
 ## Create count matrix
@@ -46,21 +53,21 @@ rownames(count_matrix) <- rownames(liver_a_counts)
 dds <- DESeqDataSetFromMatrix(
   countData = count_matrix,
   colData = sample_info,
-  design = ~ condition
+  design = ~ tissue
 )
 dds <- dds[rowSums(counts(dds)) >= 10, ]
 
 # Run DESeq2 analysis
 dds <- DESeq(dds)
 
-res <- results(dds, contrast=c("condition", "liver", "stomach"))
+res <- results(dds, contrast=c("tissue", "liver", "stomach"))
 # Sort results by adjusted p-value
 res_ordered <- res[order(res$padj), ]
 summary(res)
 
 ## PCA Plot
 vsd <- vst(dds, blind=FALSE)
-pca_plot <- plotPCA(vsd, intgroup="condition") + 
+plotPCA(vsd, intgroup="tissue") + 
   theme_minimal() +
   ggtitle("PCA of Liver vs Stomach Samples")
 
@@ -83,7 +90,7 @@ pheatmap(top_gene_counts,
          cluster_rows=TRUE,
          cluster_cols=TRUE,
          show_rownames=TRUE,
-         annotation_col=data.frame(Tissue=sample_info$condition, row.names=rownames(sample_info)),
+         annotation_col=data.frame(Tissue=sample_info$tissue, row.names=rownames(sample_info)),
          main="Top 50 Differentially Expressed Genes")
 
 # Count significant genes (padj < 0.05 and |log2FC| > 1)
@@ -111,7 +118,7 @@ pheatmap(filtered_counts,
          fontsize_row = 8,
          cutree_rows = 2,
          gaps_row = 32,
-         annotation_col=data.frame(Tissue=sample_info$condition, row.names=rownames(sample_info)),
+         annotation_col=data.frame(Tissue=sample_info$tissue, row.names=rownames(sample_info)),
          main = "Gene Expression by Selected Genes",
 )
 
@@ -139,7 +146,7 @@ plotMDS(y, labels=colnames(y), col=c(rep("blue",3), rep("red",3)),
 et <- exactTest(y)
 plotSmear(et, de.tags=rownames(topTags(et, n=100)), 
           main="Smear Plot of Differential Expression")
-abline
+abline(h=c(-1, 1), col="blue")
 
 results_df <- as.data.frame(res)
 colnames(results_df)[colnames(results_df) == "padj"] <- "FDR"
@@ -148,3 +155,5 @@ summary(results_df)
 markers<- intersect(gene_list, rownames(results_df))
 selected_results <- results_df[markers, ]
 summary(selected_results)
+
+write.csv(selected_results, "Project 1/data/results.csv")

@@ -1,0 +1,7 @@
+sample,mapped_reads_percent,missmatch_rate,mapped_multi_location_percent
+liver_a,92.37%,0.14%,6.90%
+liver_c,93.86%,0.13%,5.49%
+liver_d,93.14%,0.22%,6.22%
+stomach_a,90.05%,0.27%,6.99%
+stomach_3a,88.25%,0.29%,9.06%
+stomach_3b,77.52%,0.28%,21.08%
