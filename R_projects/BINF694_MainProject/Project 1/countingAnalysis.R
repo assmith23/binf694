@@ -40,6 +40,7 @@ sample_info <- column_to_rownames(sample_info, var = colnames(sample_info)[1])
 
 ## Load Gene Info
 gene_info <- read_excel("Project 1/data/masterData.xlsx", sheet = "gene_info")
+gene_info <- dplyr::filter(gene_info, filter_selection == "YES")
 gene_list <- gene_info$gene ## Combine Gene Lists
 
 ## Create count matrix
@@ -83,15 +84,48 @@ pheatmap(sampleDistMatrix,
          display_numbers=TRUE,
          main="Sample Distance Matrix")
 
-## Gene Heatmap
-top_genes <- rownames(res_ordered)[1:50]  # Top 50 DE genes
-top_gene_counts <- assay(vsd)[top_genes, ]
+## Top 50 Gene Heatmap
+gene_list <- rownames(res_ordered)
+top_50_genes <- rownames(res_ordered)[1:50]  # Top 50 DE genes
+top_gene_counts <- assay(vsd)[top_50_genes, ]
 pheatmap(top_gene_counts,
          cluster_rows=TRUE,
          cluster_cols=TRUE,
          show_rownames=TRUE,
          annotation_col=data.frame(Tissue=sample_info$tissue, row.names=rownames(sample_info)),
          main="Top 50 Differentially Expressed Genes")
+
+## Top 25 Genes for Each Tissue
+res_fil <- res[!is.na(res$padj), ]
+significant_genes <- res_fil[res_fil$padj < 0.05, ]
+liver_genes <- significant_genes[significant_genes$log2FoldChange > 0, ]
+stomach_genes <- significant_genes[significant_genes$log2FoldChange < 0, ]
+liver_genes_ordered <- liver_genes[order(liver_genes$log2FoldChange, decreasing = TRUE), ]
+stomach_genes_ordered <- stomach_genes[order(stomach_genes$log2FoldChange, decreasing = FALSE), ]
+liver_top <- rownames(liver_genes_ordered)[1:25]
+stomach_top <- rownames(stomach_genes_ordered)[1:25]
+selected_genes <- c(liver_top, stomach_top)
+top_gene_counts <- assay(vsd)[selected_genes, ]
+rownames(top_gene_counts) <- gene_info[rownames(top_gene_counts), "gene"]
+
+gene_origin <- data.frame(
+  Origin = ifelse(rownames(top_gene_counts) %in% liver_top, "Liver", "Stomach"),
+  row.names = rownames(top_gene_counts)
+)
+
+pheatmap(top_gene_counts,
+         cluster_rows=TRUE,
+         cluster_cols=TRUE,
+         show_rownames=TRUE,
+         annotation_col=data.frame(Tissue=sample_info$tissue, row.names=rownames(sample_info)),
+         annotation_row=gene_origin,
+         cutree_rows = 2,
+         gaps_row = 25,
+         main="Top Differentially Expressed Genes (25 Liver, 25 Stomach)",
+         fontsize_row=8)
+
+gene_overlap <- intersect(selected_genes, gene_info)
+
 
 # Count significant genes (padj < 0.05 and |log2FC| > 1)
 sig_genes <- sum(res$padj < 0.05 & abs(res$log2FoldChange) > 1, na.rm=TRUE)
@@ -157,3 +191,49 @@ selected_results <- results_df[markers, ]
 summary(selected_results)
 
 write.csv(selected_results, "Project 1/data/results.csv")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+markers <- intersect(gene_info$gene, rownames(count_matrix))
+markers <- data.frame(gene = markers)
+filtered_counts <- count_matrix[markers$gene, ]
+filtered_counts[is.na(filtered_counts)] <- 0
+filtered_counts[is.infinite(filtered_counts)] <- 0
+row_var <- apply(filtered_counts, 1, var, na.rm=TRUE)
+filtered_counts <- filtered_counts[row_var > 0,]
+
+filtered_counts <- left_join(
+  transform(filtered_counts, gene = rownames(filtered_counts)),
+  select(gene_info, tissue_association),
+  by = "gene"
+)
+
+gene_origin <- data.frame(
+  Origin = filtered_counts$tissue_association,
+  row.names = rownames(filtered_counts)
+)
+
+# Create heatmap
+pheatmap(filtered_counts[1:6],
+         scale = "row",
+         cluster_rows = TRUE,
+         cluster_cols = TRUE,
+         show_colnames = TRUE,
+         fontsize_row = 8,
+         annotation_row=gene_origin,
+         annotation_col=data.frame(Tissue=sample_info$tissue, row.names=rownames(sample_info)),
+         main = "Gene Expression by Selected Genes",
+)
