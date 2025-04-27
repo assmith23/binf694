@@ -15,8 +15,18 @@ library(ggplot2)
 library(readxl)
 library(tibble)
 library(edgeR)
+library(dplyr)
+library(TissueEnrich)
+library(tidyverse)
+library(biomaRt)
 
-
+# Functions
+get_summary_stats <- function(data) {
+  result <- data.frame(
+    Metric = c("Mean", "Median", "Minimum", "Maximum", "Q1 (25%)", "Q3 (75%)", "Std Dev", "Count"),
+    row.names = "Metric"
+)
+}
 
 ## Load Count Data
 liver_a_counts <- read.table(file="Project 1/data/liver_a.s.count.txt", sep = "\t", header = T, row.names=1)
@@ -128,12 +138,73 @@ gene_overlap <- intersect(selected_genes, gene_info)
 
 
 # Count significant genes (padj < 0.05 and |log2FC| > 1)
-sig_genes <- sum(res$padj < 0.05 & abs(res$log2FoldChange) > 1, na.rm=TRUE)
+sig_genes <- res[!is.na(res$padj) & res$padj < 0.01 & !is.na(res$log2FoldChange) & abs(res$log2FoldChange) > 1.5, ]
+cnt_sig_genes <- sum(res$padj < 0.01 & abs(res$log2FoldChange) > 1.5, na.rm=TRUE)
+cnt_sig_genes
+
+summary(sig_genes@listData)
+lapply(as.data.frame(sig_genes@listData), summary)
+  
+
+summary_df <- data.frame(
+Metric = c("Mean", "Median", "Minimum", "Maximum", "Q1 (25%)", 
+           "Q3 (75%)", "Std Dev", "Count")
+)
+
+# Calculate statistics for each column
+for (col in names(sig_genes@listData)) {
+  col_data <- sig_genes@listData[[col]]
+  summary_df[[col]] <- c(
+    mean(col_data, na.rm = TRUE),
+    median(col_data, na.rm = TRUE),
+    min(col_data, na.rm = TRUE),
+    max(col_data, na.rm = TRUE),
+    quantile(col_data, 0.25, na.rm = TRUE),
+    quantile(col_data, 0.75, na.rm = TRUE),
+    sd(col_data, na.rm = TRUE),
+    sum(!is.na(col_data))
+  )
+}
+
+# Set row names and display formatted table
+rownames(summary_df) <- summary_df$Metric
+summary_df$Metric <- NULL
+
+#kable(summary_df, caption = "Signficant Genes | Table X")
+
+# Get gene symbols from rownames
+sig_genes$symbol <- rownames(sig_genes)
+
+# Sort by absolute fold change
+if(nrow(sig_genes) > 300) {
+  ordered_genes <- sig_genes[order(abs(sig_genes$log2FoldChange), decreasing=TRUE), ]
+  top_genes <- ordered_genes[1:300, ]
+} else {
+  top_genes <- sig_genes
+}
+
+# Convert to regular data frame with gene symbols
+top_genes_df <- as.data.frame(top_genes)
+
+# Add gene symbols as column
+top_genes_df <- as.data.frame(top_genes)
+top_genes_df$gene_symbol <- rownames(top_genes)
+
+# Reorganize columns to put gene symbol first
+cols <- c("gene_symbol", setdiff(names(top_genes_df), "gene_symbol"))
+top_genes_df <- top_genes_df[, cols]
+
+# Write out results with gene symbol column
+write.csv(top_genes_df, "Project 1/results/top_genes_for_enrichment.csv", row.names=FALSE)
+
+# Create text file with just gene symbols
+gene_symbols <- rownames(top_genes)
+writeLines(gene_symbols, "Project 1/results/gene_symbols.txt")
+
 
 # Save results to file (for your project deliverable)
 write.table(as.data.frame(res_ordered), file="Project 1/results/liver_vs_stomach_DESeq2_results.tsv", 
             sep="\t", quote=FALSE)
-
 
 ###### Compare Selected Genes
 markers<- intersect(gene_list, rownames(count_matrix))
