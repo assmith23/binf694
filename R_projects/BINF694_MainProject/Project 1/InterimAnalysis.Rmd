@@ -2,7 +2,9 @@
 title: "Stomach vs. Liver Transcriptomic Analysis"
 subtitle: "BINF694 - Interim Report"
 date: "April 22, 2025"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -74,7 +76,7 @@ vsd <- vst(dds, blind=FALSE)
 ```
 
 # Introduction
-The human body comprises diverse organs with specialized functions that are ultimately reflected in their gene expression profiles. Of these, the liver and stomach represent two distinct but complementary filtering systems that process what enters the body. Transcriptomic analysis allows us to see these underling specialized functions at the genomic level.
+The human body is comprised of diverse organs with specialized functions that are ultimately reflected in their gene expression profiles. Of these, the liver and stomach represent two distinct but complementary filtering systems that process what enters the body. Transcriptomic analysis allows us to see these underling specialized functions at the genomic level.
 
 The liver serves as the body's primary detoxification center, filtering blood. It synthesizes essential proteins including albumin and clotting factors, and maintains glucose homeostasis through glycogen storage and gluconeogenesis (Rui, 2014). These functions require coordinated expression of genes encoding cytochrome P450 enzymes, transporters like ABCC2, and serum proteins such as alpha-1 antitrypsin (AAT).
 
@@ -84,7 +86,6 @@ This hypothesizes that the liver and stomach will show differentially expressed 
 
 ## Hypothesis
 The liver and stomach will show differentially expressed gene patterns reflecting their specialized filtering functions. The liver will express higher levels of detoxification and metabolic pathway genes; while the stomach will show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes.
-
 
 # Methods
 Three biological replicates each of human liver (samples a, c, and d) and stomach (samples 1a, 2a, and 3b) tissues were selected for comparative transcriptomic analysis. The analysis aimed to test the hypothesis that liver and stomach tissues would show differentially expressed gene patterns reflecting their specialized filtering functions, with the liver expressing higher levels of detoxification and metabolic pathway genes, while the stomach would show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes.
