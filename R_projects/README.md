@@ -12,18 +12,18 @@ were then counting. Using the counting results we were able to perform expressio
 FP: `/home/msmitty/Documents/binf694/R_projects/BINF694_MainProject/Project 1`
 
 - data
-	- masterData.xlsx
+	- masterData.xlsx \
 	This file contains much of the master data for the project.
 	- liver_a.s.count.txt
 	- liver_c.s.count.txt
 	- liver_d.s.count.txt
 	- stomach_a.s.count.txt
 	- stomach_3a.s.count.txt
-	- stomach_3b.s.count.txt
+	- stomach_3b.s.count.txt \
 	The count files contain the counting results that were used for the further analysis.
 - results
-- countingAnalysis.R
+- countingAnalysis.R \
 	Main script for the project.
-- er_geneSelection.R
+- er_geneSelection.R \
 	New script written on 4/27 to use for further enrichment analysis.
 
