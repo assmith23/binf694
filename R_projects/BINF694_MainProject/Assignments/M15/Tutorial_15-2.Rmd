@@ -1,0 +1,94 @@
+---
+title: "Tutorial 15.2"
+subtitle: "BINF694"
+author: "A Manning Smith"
+output: html_document
+date: "04-04-2025"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libaries, include=FALSE}
+library(pheatmap)
+library(RColorBrewer)
+library(edgeR)
+```
+
+```{r loadData, echo=TRUE}
+cancer_counts <- read.table(file="oral_carcinoma_counts.txt", sep = "\t", header = T)
+head(cancer_counts)
+y <- DGEList(counts=cancer_counts[,3:8], genes=cancer_counts[,1:2])
+
+## Editing Row Labels
+rownames(y$counts) <- rownames(y$genes) <- y$genes$EntrezGene
+y$genes$EntrezGene <- NULL
+#y$samples
+
+## Calculating Library Scaling Factors
+y <- calcNormFactors(y)
+
+## Organizing Samples into Groups
+y$samples$group = c("N", "T", "N", "T", "N", "T")
+```
+
+## MDS plot
+```{r MDS_plot, echo=TRUE}
+## Creating a Multi-Dimensional Scaling (MDS) Plot
+plotMDS(y)
+```
+
+## BCV plot
+```{r BCV_plot, echo=TRUE}
+### A. Calculating the Dispersion
+y <- estimateDisp(y)
+
+### B. Creating a BCV Plot
+plotBCV(y)
+```
+
+## Smear plot (exact test)
+```{r smear_plot, echo=TRUE}
+### C. Differential Expression Analysis
+et <- exactTest(y, pair=c("N","T"))
+summary(de <- decideTests(et))
+
+### D. Visualizing Differentially Expressed Genes
+detags <- rownames(y)[as.logical(de)]
+plotSmear(et, de.tags=detags)
+abline(h=c(-1, 1), col="blue")
+```
+
+# GLM
+## Screenshot of design matrix
+```{r designMatrix, echo=TRUE}
+### A. Constructing the Design Matrix
+Patient <- factor(c(8,8,33,33,51,51))
+Tissue <- factor(c("N","T","N","T","N","T"))
+design <- model.matrix(~Patient+Tissue)
+rownames(design) <- colnames(y)
+design
+```
+
+## Smear plot (generalized linear model)
+```{r smear_glm, echo=TRUE}
+### B. Calculating the Dispersion
+y2 <- y
+y2 <- estimateDisp(y2, design, robust=TRUE)
+
+### C. Differential Expression Analysis with the GLM
+fit <- glmFit(y2, design)
+lrt <- glmLRT(fit, coef=4)
+summary(de2 <- decideTests(lrt))
+
+detags <- rownames(y2)[as.logical(de2)]
+plotSmear(lrt, de.tags=detags)
+abline(h=c(-1, 1), col="blue")
+```
+
+## Differentially Expressed Genes
+```{r deg_glm, echo=TRUE}
+diffExpGenes_glm <- topTags(lrt, n=6, p.value = 0.05)
+head(diffExpGenes_glm$table)
+```
