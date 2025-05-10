@@ -1,0 +1,176 @@
+---
+title: "Need Title"
+subtitle: "BINF694 - Gene Expression Final Report"
+author: "A Manning Smith"
+date: "May 16, 2025"
+output:
+  #html_document: default
+  #pdf_document: default
+  github_document: default
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load Libraries
+library(knitr)
+library(DESeq2)
+library(pheatmap)
+library(RColorBrewer)
+library(ggplot2)
+library(readxl)
+library(tibble)
+library(edgeR)
+library(dplyr)
+library(TissueEnrich)
+library(tidyverse)
+library(biomaRt)
+library(writexl)
+```
+
+```{r body, message=FALSE, warning=FALSE, include=FALSE}
+setwd("~/Documents/binf694/R_projects/BINF694_MainProject")
+
+## Load Count Data
+liver_a_counts <- read.table(file="Project 1/data/liver_a.s.count.txt", sep = "\t", header = T, row.names=1)
+liver_c_counts <- read.table(file="Project 1/data/liver_c.s.count.txt", sep = "\t", header = T, row.names=1)
+liver_d_counts <- read.table(file="Project 1/data/liver_d.s.count.txt", sep = "\t", header = T, row.names=1)
+stomach_a_counts <- read.table(file="Project 1/data/stomach_a.s.count.txt", sep = "\t", header = T, row.names=1)
+stomach_3b_counts <- read.table(file="Project 1/data/stomach_3b.s.count.txt", sep = "\t", header = T, row.names=1)
+stomach_3a_counts <- read.table(file="Project 1/data/stomach_3a.s.count.txt", sep = "\t", header = T, row.names=1)
+names(liver_a_counts)[1] <- "count"
+names(liver_c_counts)[1] <- "count"
+names(liver_d_counts)[1] <- "count"
+names(stomach_a_counts)[1] <- "count"
+names(stomach_3b_counts)[1] <- "count"
+names(stomach_3a_counts)[1] <- "count"
+
+
+## Load Sample Info
+sample_info <- read_excel("Project 1/data/masterData.xlsx", sheet = "sample_info")
+sample_info <- sample_info[, 1:2] 
+sample_info <- column_to_rownames(sample_info, var = colnames(sample_info)[1])
+
+## Load Gene Info
+gene_info <- read_excel("Project 1/data/masterData.xlsx", sheet = "gene_info")
+gene_info <- dplyr::filter(gene_info, filter_selection == "YES")
+gene_list <- gene_info$gene ## Combine Gene Lists
+
+## Create count matrix
+count_matrix <- cbind(
+  liver_a = liver_a_counts$count,liver_c = liver_c_counts$count,liver_d = liver_d_counts$count,
+  stomach_a = stomach_a_counts$count,stomach_3a = stomach_3a_counts$count,stomach_3b = stomach_3b_counts$count
+)
+rownames(count_matrix) <- rownames(liver_a_counts)
+
+## Creating a DESeqDataSet
+dds <- DESeqDataSetFromMatrix(
+  countData = count_matrix,
+  colData = sample_info,
+  design = ~ tissue
+)
+dds <- dds[rowSums(counts(dds)) >= 10, ]
+
+# Run DESeq2 analysis
+dds <- DESeq(dds)
+
+res <- results(dds, contrast=c("tissue", "liver", "stomach"))
+# Sort results by adjusted p-value
+res_ordered <- res[order(res$padj), ]
+summary(res)
+
+vsd <- vst(dds, blind=FALSE)
+```
+
+# Abstract
+
+# Introduction
+The human body is comprised of diverse organs with specialized functions that are ultimately reflected in their gene expression profiles. Of these, the liver and stomach represent two distinct but complementary filtering systems that process what enters the body. Transcriptomic analysis allows us to see these underling specialized functions at the genomic level.
+
+The liver serves as the body's primary detoxification center, filtering blood. It synthesizes essential proteins including albumin and clotting factors, and maintains glucose homeostasis through glycogen storage and gluconeogenesis (Rui, 2014). These functions require coordinated expression of genes encoding cytochrome P450 enzymes, transporters like ABCC2, and serum proteins such as alpha-1 antitrypsin (AAT).
+
+In contrast, the stomach functions as the initial filtering station for ingested materials. Its specialized epithelium includes parietal cells that secrete hydrochloric acid (HCl) via H+/K+-ATPase pumps (ATP4A, ATP4B), chief cells producing pepsinogen, and mucus-secreting cells that protect the stomach lining (Mills & Shivdasani, 2011). This acidic environment serves as both a chemical barrier against pathogens and initiates protein digestion. 
+
+This hypothesizes that the liver and stomach will show differentially expressed gene patterns reflecting their specialized filtering functions, with the liver expressing higher levels of detoxification and metabolic pathway genes, while the stomach will show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes. Through RNA-sequencing analysis of three biological replicates from each tissue, we aim to characterize these distinct transcriptomic signatures and identify the key molecular pathways that distinguish these filtering organs.
+
+## Hypothesis
+The liver and stomach will show differentially expressed gene patterns reflecting their specialized filtering functions. The liver will express higher levels of detoxification and metabolic pathway genes; while the stomach will show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes.
+
+# Methods
+Three biological replicates each of human liver (samples a, c, and d) and stomach (samples 1a, 2a, and 3b) tissues were selected for comparative transcriptomic analysis. The analysis aimed to test the hypothesis that liver and stomach tissues would show differentially expressed gene patterns reflecting their specialized filtering functions, with the liver expressing higher levels of detoxification and metabolic pathway genes, while the stomach would show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes.
+
+Claude 3.7 Sonnet[https://claude.ai/share/5142901c-bf60-4d6b-a944-a95c549ac000]
+
+## Qualitiy Control
+The first step was to perform quality control analysis on the 6 tissue samples using FastQC. The selected samples were analyzed using version 0.11.9 of FastQC. Quality metrics including per base sequence quality, per sequence quality scores, sequence duplication levels, adapter content, and k-mer content were evaluated.
+
+#### Liver Tissue Analysis
+Overall the three liver samples analyzed expressed similar results. There were no concerns with the results from samples a and c, however, with sample d there is some concern with a substantial proportion of bases had quality scores below 28, which led to higher filtering rates during trimming.
+
+#### Stomach Tissue Analysis
+Similar to the liver tissues, two stomach samples (1a and 2a) showed satisfactory quality metrics. Sample 3b exhibited quality concerns with a larger proportion of bases below quality score 28, resulting in more aggressive filtering during trimming.
+
+
+## Trimming
+```{r tab1_trimmingData, echo=FALSE}
+trim_df <- read.csv("~/Documents/binf694/R_projects/BINF694_MainProject/Project 1/data/trimming_results.csv", header=TRUE)
+kable(trim_df, caption = "Trimming Results | Table 1")
+```
+After it was determined that we can proceed with further analysis of the provided samples, FastQC was utilized to trim the samples. The samples were filtered on a minimum read length of 40 and a quality score of 28. This will allow us to retain the sequences meeting our quality threshold.
+
+As expected, liver_d and stomach_3b had the highest proportion of sequences filtered out during this step, consistent with their lower initial quality metrics.
+
+## Mapping
+```{r tab2_mappingData, echo=FALSE}
+map_df <- read.csv("~/Documents/binf694/R_projects/BINF694_MainProject/Project 1/data/mapping_results.csv", header=TRUE)
+kable(map_df, caption = "Mapping Results | Table 2")
+```
+Using the filtered sequences, STAR version 2.7.11b was utilized to align the sequences in the genome. The results from the mapping were not concerning. Overall, there was a higher mismatch rate for the stomach tissue samples. The may also be some quality issues with stomach_3b as the mapping rate of about 77.5% is pretty low. This may indicate some contamination in the sample as well as the multi mapping rate was much higher than the other tissue samples.
+
+SAMtools version 1.19.2 was then used to create the .bam files that will be used for counting.
+
+## Genome Visulization
+Integrative Genomics Viewer (IGV) version 2.8.0 was used to visualize read alignments for genes of interest, allowing for inspection of exon coverage patterns and verification of expression differences between liver and stomach tissues.
+
+## Read Counting
+HTSeq version 0.11.2 was used to count the 6 sorted and aligned .bam file provided by trimming and mapping.
+
+**Paramaters:**
+```
+mode intersection-nonempty
+stranded no
+format bam
+type exon
+idattr gene_name
+```
+
+## Differential Expression Analysis
+Differential expression analysis was performed using DESeq2 version 1.38.0 in R version 4.2.0.
+1. Via a created count matrix from the six tissue counts, a DESeqDataSet object was created
+2. Low-count genes (those with fewer than 10 reads across all samples) were filtered out
+3. Results were ordered by adjusted p-value and exported to a tab-delimited file
+
+## Understanding Sample Relationships
+- Principal Component Analysis (PCA) on variance-stabilized transformed data (vst) from DESeq2
+- Sample distance matrix visualized as a heatmap with hierarchical clustering
+- Multi-Dimensional Scaling (MDS) plot from edgeR to assess sample relationships
+- Heatmaps of the top 50 differentially expressed genes across all samples
+- MA plots to show the relationship between mean expression and log2 fold change
+- Smear plots from edgeR to visualize differentially expressed genes
+
+Additionally, selected marker genes from various research publications were analyzed separately and visualized in a heatmap with row-based scaling to highlight expression patterns.
+
+### Pathway / GO enrichment
+
+
+# Results
+
+# Discussion
+
+# Conclusion
+
+# References
+Gattu, A. K., Swenson, E. S., Iwakiri, Y., Samuel, V. T., Troiano, N., Berry, R., Church, C. D., Rodeheffer, M. S., Carpenter, T. O., & Chung, C. (2013). Determination of mesenchymal stem cell fate by pigment epithelium-derived factor (PEDF) results in increased adiposity and reduced bone mineral content. FASEB journal : official publication of the Federation of American Societies for Experimental Biology, 27(11), 4384–4394. https://doi.org/10.1096/fj.13-232900
+
+Mills, J. C., & Shivdasani, R. A. (2011). Gastric epithelial stem cells. Gastroenterology, 140(2), 412–424. https://doi.org/10.1053/j.gastro.2010.12.001
+
+Rui L. (2014). Energy metabolism in the liver. Comprehensive Physiology, 4(1), 177–197. https://doi.org/10.1002/cphy.c130024

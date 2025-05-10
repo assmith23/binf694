@@ -89,12 +89,14 @@ stomach_genes <- sig_genes[sig_genes$log2FoldChange < 0,]
 # Get top 250 from each tissue (sorted by padj)
 top_250_liver <- head(liver_genes, 250)
 top_250_stomach <- head(stomach_genes, 250)
+top_400_total <- head(sig_genes, 400)
 
 # Create files for DAVID
 write.table(rownames(top_250_liver), "Project 1/results/top_250_liver_DEGs.txt", 
             row.names = FALSE, col.names = FALSE, quote = FALSE, sep = "\t")
-
 write.table(rownames(top_250_stomach), "Project 1/results/top_250_stomach_DEGs.txt", 
+            row.names = FALSE, col.names = FALSE, quote = FALSE, sep = "\t")
+write.table(rownames(top_400_total), "Project 1/results/top_400_total_DEGs.txt",
             row.names = FALSE, col.names = FALSE, quote = FALSE, sep = "\t")
 
 # Also save complete results table as requested in the project
@@ -112,6 +114,10 @@ top_500 <- rbind(liver_top, stomach_top)
 write_xlsx(list("All_Results" = complete_results, 
                 "Top_500" = top_500), 
            "Project 1/results/liver_stomach_DEG_results.xlsx")
+
+write.table(rownames(top_500), "Project 1/results/top_500_combined.txt",
+            row.names = FALSE, col.names = FALSE, quote = FALSE, sep = "\t")
+
 
 
 liver_top_genes <- rownames(liver_genes)[1:25]
