@@ -1,5 +1,5 @@
 ---
-title: "Need Title"
+title: "Gene Expression Signatures Underlying Specialized Filtration Processes in Human Liver and Stomach"
 subtitle: "BINF694 - Gene Expression Final Report"
 author: "A Manning Smith"
 date: "May 16, 2025"
@@ -44,7 +44,6 @@ names(stomach_a_counts)[1] <- "count"
 names(stomach_3b_counts)[1] <- "count"
 names(stomach_3a_counts)[1] <- "count"
 
-
 ## Load Sample Info
 sample_info <- read_excel("Project 1/data/masterData.xlsx", sheet = "sample_info")
 sample_info <- sample_info[, 1:2] 
@@ -54,6 +53,9 @@ sample_info <- column_to_rownames(sample_info, var = colnames(sample_info)[1])
 gene_info <- read_excel("Project 1/data/masterData.xlsx", sheet = "gene_info")
 gene_info <- dplyr::filter(gene_info, filter_selection == "YES")
 gene_list <- gene_info$gene ## Combine Gene Lists
+
+## Load Enrichment Results
+enrichment_results <- read_excel("Project 1/finalDeliverables/results/enrichmentResults.xlsx", sheet = "ER_results")
 
 ## Create count matrix
 count_matrix <- cbind(
@@ -82,6 +84,7 @@ vsd <- vst(dds, blind=FALSE)
 ```
 
 # Abstract
+The human liver and stomach represent two distinct filtering systems with complementary functions in the body. While the liver filters blood and performs metabolic detoxification, the stomach filters ingested materials through physical and chemical processes. This study aimed to characterize the transcriptomic differences between these organs to better understand their specialized functions. RNA-sequencing was performed on three biological replicates each of human liver and stomach tissues. Following quality assessment, adapter trimming, and alignment to the human reference genome (GRCh38), differential gene expression analysis was conducted using DESeq2. Principal component analysis revealed extreme separation along PC1 (explaining 95% of variance), confirming fundamentally different expression profiles between tissues. Top differentially expressed genes included liver-specific markers involved in detoxification pathways (ALB, SERPINC1, CYP enzymes) and stomach-specific genes related to mucosal protection (MUC5AC, GKN1, TFF1). Hierarchical clustering demonstrated two distinct gene expression patterns with minimal overlap between tissues. These findings support our hypothesis that liver and stomach tissues exhibit distinctive transcriptomic signatures reflecting their specialized filtering functions, with liver expressing higher levels of detoxification and metabolic pathway genes, while stomach shows elevated expression of genes related to acid production, mucus secretion, and digestive processes.
 
 # Introduction
 The human body is comprised of diverse organs with specialized functions that are ultimately reflected in their gene expression profiles. Of these, the liver and stomach represent two distinct but complementary filtering systems that process what enters the body. Transcriptomic analysis allows us to see these underling specialized functions at the genomic level.
@@ -164,7 +167,273 @@ Additionally, selected marker genes from various research publications were anal
 
 # Results
 
+## Sample Relationship
+
+The Principle component analysis (PCA) plot provides a dimensionality reduction visualization of the RNA-seq data after variance stabilizing transformation.
+
+```{r fig1_pca, echo=FALSE, fig.height=3, fig.width=6.5, message=FALSE, warning=FALSE}
+## PCA Plot
+vsd <- vst(dds, blind=FALSE)
+plotPCA(vsd, intgroup="tissue") + 
+  theme_minimal() +
+  ggtitle("PCA of Liver vs Stomach Samples | Figure 1")
+```
+
+95% of the variance in the data is explained by the first principal component (PC1), which separates the liver and stomach samples. The second principal component (PC2) captures a smaller amount of variance (5%) and does not show a clear separation between the two tissue types. The large proportion of variance explained by PC1 suggests there are strongly differentially expressed genes between these tissues, which should provide rich material for pathway and functional analysis. This is consistent with the expected biological differences between these organs, with liver specialized for blood filtration/detoxification and stomach for food processing. 
+
+Next we will use a heatmap to visualize the clustering of samples by tissue type.
+
+```{r fig2_heatmap, echo=FALSE, fig.height=5, fig.width=6.5, message=FALSE, warning=FALSE}
+sampleDists <- dist(t(assay(vsd)))
+sampleDistMatrix <- as.matrix(sampleDists)
+colors <- colorRampPalette(rev(brewer.pal(9, "Blues")))(255)
+pheatmap(sampleDistMatrix,
+         clustering_distance_rows=sampleDists,
+         clustering_distance_cols=sampleDists,
+         col=colors,
+         display_numbers=TRUE,
+         main="Sample Distance Matrix | Figure 2")
+```
+The heatmap shows a hierarchical clustering of your six samples based on their gene expression profiles after variance stabilizing transformation. The numerical values represent Euclidean distances between samples, with darker blue indicating greater similarity (smaller distance).
+
+Observations to note:
+
+- There are two defined clusters corresponding to each tissue type.
+- With-in the both clusters for liver and stomach there is a high similarity to each other respectively.
+- Overall, the distances between liver and stomach sample are much larger, indicating substantial differences between tissue type
+
+This visualization strongly supports the experimental design. The clear separation between liver and stomach samples confirms that tissue-specific gene expression patterns are the dominant source of variation in your dataset, which aligns with the hypothesis about the distinct filtering functions of these organs.
+
+## Differential Expression Analysis
+Looking specifically into gene expression in terms of the different tissue types. The DESeq2 analysis was utilized to create a heatmap that shows the top 50 differentially expressed genes between liver and stomach tissues. The heatmap displays normalized expression values for the 50 most significantly differentially expressed genes.
+
+```{r fig3_geneHeatmap, echo=FALSE, fig.height=9, fig.width=6.5, message=FALSE, warning=FALSE}
+gene_list <- rownames(res_ordered)
+top_50_genes <- rownames(res_ordered)[1:50]  # Top 50 DE genes
+top_gene_counts <- assay(vsd)[top_50_genes, ]
+pheatmap(top_gene_counts,
+         cluster_rows=TRUE,
+         cluster_cols=TRUE,
+         show_rownames=TRUE,
+         annotation_col=data.frame(Tissue=sample_info$tissue, row.names=rownames(sample_info)),
+         main="Top 50 Differentially Expressed Genes | Figure 3")
+```
+Pretty much all of the top genes were more directly associated with liver specific functions. Some of the liver functions highlighted by these genes were detoxification enzymes, lipid metabolism, and metabolic enzymes.
+
+One gene that stands out as the most significant for stomach tissue is 'SERPINF1'. The gene encodes a protein PEDF known for being an potent inhibitor of angiogenesis a process of forming new blood vessels from existing blood vessels. Another role is as an anti-inflammatory and anti-oxidative stress agent. This is especially important in the liver but also in the stomach as both organs are exposed to damaging substances (Gattu 2013).
+
+The next step was to determine the top genes differencially expressed for each tissue type. The goal here is to determine if there are any gene similarly expressed genes based on the top genes for each tissue. This will help shed more light on the top expressed genes from stomach tissue samples because overall there was less differentially expressed genes for this type.
+
+```{r fig4_geneHeatmap2, echo=FALSE, fig.height=9, fig.width=6.5, message=FALSE, warning=FALSE}
+res_fil <- res[!is.na(res$padj), ]
+significant_genes <- res_fil[res_fil$padj < 0.05, ]
+liver_genes <- significant_genes[significant_genes$log2FoldChange > 0, ]
+stomach_genes <- significant_genes[significant_genes$log2FoldChange < 0, ]
+liver_genes_ordered <- liver_genes[order(liver_genes$log2FoldChange, decreasing = TRUE), ]
+stomach_genes_ordered <- stomach_genes[order(stomach_genes$log2FoldChange, decreasing = FALSE), ]
+liver_top <- rownames(liver_genes_ordered)[1:25]
+stomach_top <- rownames(stomach_genes_ordered)[1:25]
+selected_genes <- c(liver_top, stomach_top)
+top_gene_counts <- assay(vsd)[selected_genes, ]
+#rownames(top_gene_counts) <- selected_genes[rownames(top_gene_counts), "gene"]
+
+gene_origin <- data.frame(
+  Origin = ifelse(rownames(top_gene_counts) %in% liver_top, "Liver", "Stomach"),
+  row.names = rownames(top_gene_counts)
+)
+
+pheatmap(top_gene_counts,
+         cluster_rows=TRUE,
+         cluster_cols=TRUE,
+         show_rownames=TRUE,
+         annotation_col=data.frame(Tissue=sample_info$tissue, row.names=rownames(sample_info)),
+         annotation_row=gene_origin,
+         cutree_rows = 2,
+         gaps_row = 25,
+         main="Differentially Expressed Genes | Figure 4",
+         fontsize_row=8)
+```
+
+Moreover, this heatmap continues to confirm the hypothesis of the distinct "filtering" function differences of the liver and stomach. There are two distant clusters once again with no specific gene showing expression in both tissue type.
+
+**Liver-Specific Genes:**
+ALB: Albumin, the most abundant protein in blood plasma, produced almost exclusively by the liver\
+SERPINC1: Antithrombin, a serine protease inhibitor that regulates blood coagulation
+HP, HRG, AHSG, APOA2
+
+
+**Stomach-Specific Genes:**
+MUC5AC and MUC3, GKN1 and GKN2, CLDN18, PSCA, VSIG1, TFF1 and TFF2: Trefoil factors involved in mucosal protection and repair
+
+Next, a more targeted approach was taken to use a pre-defined list of important genes related to each tissue type. These genes were taken from a various of research publications based on their importance in the various functions of their respective organ. These pre-defined genes can be found LISTED HERE.
+
+Using these genes one last heatmap was created to see if there is any expression between even more specific genes.
+
+```{r fig5_geneHeatmap3, echo=FALSE, fig.height=9, fig.width=6.5, message=FALSE, warning=FALSE}
+markers<- intersect(gene_list, rownames(count_matrix))
+filtered_counts <- count_matrix[markers, ]
+filtered_counts[is.na(filtered_counts)] <- 0
+filtered_counts[is.infinite(filtered_counts)] <- 0
+row_var <- apply(filtered_counts, 1, var, na.rm=TRUE)
+filtered_counts <- filtered_counts[row_var > 0,]
+
+# Create heatmap
+pheatmap(filtered_counts,
+         scale = "row",
+         cluster_rows = TRUE,
+         cluster_cols = TRUE,
+         show_colnames = TRUE,
+         fontsize_row = 8,
+         annotation_col=data.frame(Tissue=sample_info$tissue, row.names=rownames(sample_info)),
+         main = "Gene Expression by Selected Genes | Figure 5",
+)
+```
+
+The top right cluster represents that of stomach related genes. The bottom left cluster represents that of genes are the liver related. Once again we can see two distinct clusters. There is very few overlap in expression between the two tissue types.
+
+## Enrichment Analysis
+To understand the biological significance of differentially expressed genes between liver and stomach tissues, we performed functional enrichment analysis using DAVID. Analysis of the top differentially expressed genes revealed distinct functional signatures that align with the specialized filtering roles of each organ.
+
+### Gene Selection
+The analysis was performed on the top 400 differentially expressed genes, which were selected based on their adjusted p-value and log2 fold change.
+
+```{r f, eval=FALSE, fig.height=9, fig.width=6.5, message=FALSE, warning=FALSE, include=TRUE}
+# Get differentially expressed genes with adjusted p-value < 0.05
+sig_genes <- res_ordered[!is.na(res_ordered$padj) & res_ordered$padj < 0.05,]
+
+# Separate liver and stomach upregulated genes
+liver_genes <- sig_genes[sig_genes$log2FoldChange > 0,]
+stomach_genes <- sig_genes[sig_genes$log2FoldChange < 0,]
+```
+
+Other sets were used in the analysis as well. Two sets comprised of the top 250 genes related to their specific tissue were used. The results suggest that the liver and stomach have distinct functional roles, with the liver being more involved in detoxification and metabolic processes, while the stomach is more focused on digestive functions. Contributing to our hypothesis that the liver and stomach will show differentially expressed gene patterns reflecting their specialized filtering functions.
+
+**The following enrichment results were obtained from the analysis of the top 400 differentially expressed genes:**
+### Gene Ontology Biological Process
+Blood coagulation was the most significantly enriched process (26 genes, 6.6%, p=5.7E-21), followed by xenobiotic metabolic process (23 genes, 5.8%, p=1.2E-15), proteolysis (34 genes, 8.6%, p=9.2E-8), and innate immune response (24 genes, 6.1%, p=6.1E-4). These enriched pathways clearly reflect the liver's multifaceted filtering functions, including blood component regulation, detoxification, protein processing, and immunological surveillance.
+
+```{r fig6_enrichBP, echo=FALSE, fig.height=6, fig.width=8, message=FALSE, warning=FALSE}
+# Create a bar plot for the top 10 enriched biological processes
+enrich_bp <- enrichment_results %>%
+  filter(category == "GOTERM_BP_DIRECT") %>%
+  filter(run_file == "top400_total_DEG-DAVID") %>%
+  arrange(desc(Count)) %>%
+  head(10)
+
+# Bar Chart
+ggplot(enrich_bp, aes(x = reorder(Term, -Count), y = Count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Top 10 Enriched Biological Processes | Figure 6",
+       x = "Biological Process",
+       y = "Gene Count") +
+  theme_minimal()
+```
+
+
+### Gene Ontology Cellular Component
+
+
+```{r fig7_enrichCC, echo=FALSE, fig.height=6, fig.width=8, message=FALSE, warning=FALSE}
+# Create a bar plot for the top 10 enriched biological processes
+enrich_bp <- enrichment_results %>%
+  filter(category == "GOTERM_CC_DIRECT") %>%
+  filter(run_file == "top400_total_DEG-DAVID") %>%
+  arrange(desc(Count)) %>%
+  head(10)
+
+# Bar Chart
+ggplot(enrich_bp, aes(x = reorder(Term, -Count), y = Count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Top 10 Enriched Cellular Component | Figure 7",
+       x = "Cellular Component",
+       y = "Gene Count") +
+  theme_minimal()
+```
+
+### Gene Ontology Molecular Function
+
+
+```{r fig8_enrichMF, echo=FALSE, fig.height=6, fig.width=8, message=FALSE, warning=FALSE}
+# Create a bar plot for the top 10 enriched Molecular functions
+enrich_bp <- enrichment_results %>%
+  filter(category == "GOTERM_MF_DIRECT") %>%
+  filter(run_file == "top400_total_DEG-DAVID") %>%
+  arrange(desc(Count)) %>%
+  head(10)
+
+# Bar Chart
+ggplot(enrich_bp, aes(x = reorder(Term, -Count), y = Count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Top 10 Enriched Molecular Function | Figure 8",
+       x = "Molecular Function",
+       y = "Gene Count") +
+  theme_minimal()
+```
+
+### KEGG Pathway Analysis
+The most significantly enriched pathway was metabolic pathways (130 genes, 32.8%, p=5.54E-32), highlighting the liver's central role in metabolism. This was followed by complement and coagulation cascades (36 genes, 9.1%, p=5.57E-31), which aligns with the liver's function in blood protein homeostasis.
+Particularly notable was the enrichment of pathways directly related to the liver's detoxification role, including bile secretion (24 genes, 6.1%, p=1.04E-15), drug metabolism - cytochrome P450 (19 genes, 4.8%, p=2.87E-12), and metabolism of xenobiotics by cytochrome P450 (17 genes, 4.3%, p=1.13E-09).
+
+```{r fig9_enrichKEGG, echo=FALSE, fig.height=6, fig.width=8, message=FALSE, warning=FALSE}
+# Create a bar plot for the top 10 enriched KEGG pathways
+enrich_kegg <- enrichment_results %>%
+  filter(category == "KEGG_PATHWAY") %>%
+  filter(run_file == "top400_total_DEG-DAVID") %>%
+  arrange(desc(Count)) %>%
+  head(10)
+
+# Bar Chart
+ggplot(enrich_kegg, aes(x = reorder(Term, -Count), y = Count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Top 10 Enriched KEGG Pathways | Figure 7",
+       x = "KEGG Pathway",
+       y = "Gene Count") +
+  theme_minimal()
+```
+
+### Interpro
+```{r fig9_enrichInterpro, echo=FALSE, fig.height=6, fig.width=8, message=FALSE, warning=FALSE}
+# Create a bar plot for the top 10 enriched Interpro
+enrich_interpro <- enrichment_results %>%
+  filter(category == "INTERPRO") %>%
+  filter(run_file == "top400_total_DEG-DAVID") %>%
+  arrange(desc(Count)) %>%
+  head(10)
+# Bar Chart
+ggplot(enrich_interpro, aes(x = reorder(Term, -Count), y = Count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Top 10 Enriched Interpro | Figure 9",
+       x = "Interpro",
+       y = "Gene Count") +
+  theme_minimal()
+```
+
+In contrast to liver tissue, stomach-specific genes showed enrichment in biological processes related to epithelial integrity, gastric acid secretion, and mucus production (Table X). Key enriched pathways included digestion, mucosal protection, and ion transport, reflecting the stomach's role as a food processing filter. Genes such as MUC5AC, GKN1, and TFF1 were central to these stomach-specific functions, highlighting the functional specialization between these two filtering organs.
+
+In conclusion, these enrichment analysis results provide compelling evidence supporting our hypothesis. The liver's transcriptomic profile reveals a sophisticated blood and chemical filtering system, with highlighted expression of genes involved in detoxification, protein processing, lipid metabolism, and hemostasis. In contrast, the stomach's gene expression pattern reflects its specialized role in food processing through acid production, mucus secretion, and initial digestive functions. These distinct molecular signatures underscore the specialized nature of these organs' filtering mechanisms, validating our initial hypothesis about their functional differentiation.
+
 # Discussion
+This study set out to test the hypothesis that liver and stomach tissues would show differentially expressed gene patterns reflecting their specialized filtering functions, with the liver expressing higher levels of detoxification and metabolic pathway genes, while the stomach would show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes. Our transcriptomic analysis has revealed distinct molecular signatures that strongly support this hypothesis and provide novel insights into the specialized filtering mechanisms of these organs.
+
+## Enrichment Results
+Our enrichment analysis results showed a notable predominance of liver-related pathways and functions compared to stomach-specific processes. This asymmetry likely reflects the fundamental biological complexity difference between these two filtering organs. The liver serves as the body's central metabolic hub and primary detoxification center, necessitating a diverse array of molecular machinery encompassing multiple metabolic pathways, detoxification systems, blood protein regulation, and immune functions. This is evidenced by the extensive enrichment in pathways including xenobiotic metabolism, complement and coagulation cascades, lipid metabolism, and drug processing. In contrast, the stomach's filtering function is more specialized and focused on acid production, mucus secretion, and initial food processing, requiring a comparatively narrower set of molecular pathways. Additionally, the liver's position as the body's primary interface with bloodborne substances requires a more complex transcriptional program to manage the filtering of diverse endogenous and exogenous compounds, while the stomach primarily filters ingested materials through relatively fewer specialized cellular processes. The greater diversity and significance of liver-enriched pathways in our results underscores the liver's more multifaceted filtering role compared to the more specialized but equally essential filtering function of the stomach.
+
+## Methodological Evaluation
+The use of three biological replicates for each tissue type provided statistical robustness for our differential expression analysis, as evidenced by the clear separation in PCA analysis and the high statistical significance of our enrichment results. The application of DESeq2 for differential expression analysis, combined with comprehensive pathway analysis using DAVID and Enrichr, allowed for a thorough characterization of the functional differences between these tissues.
+
+However, several limitations should be acknowledged. Firstly, the quality concerns with liver_d and stomach_3b samples noted in the QC analysis may have introduced some variability in our results. While these samples met the minimum quality thresholds for inclusion, the higher filtering rates during trimming may have affected the detection of low-abundance transcripts. Additional biological replicates or more stringent quality control could strengthen future analyses. 
+
+Secondly, while our analysis focused on the top differentially expressed genes, it is important to consider that other genes with lower fold changes may also play significant roles in liver and stomach functions. Future studies could benefit from a more comprehensive analysis of the entire transcriptome, including low-abundance transcripts and non-coding RNAs.
+
+## Future Direction
+Claude 3.7 Sonnet[https://claude.ai/share/883da6f3-b64f-428b-8a11-4c270111f1e7]
+
+Several promising directions emerge from this study. First, expanding the analysis to include additional filtering organs—such as kidneys and lungs—would provide a more comprehensive understanding of specialized filtering mechanisms across the body.
 
 # Conclusion
 
