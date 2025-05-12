@@ -28,6 +28,9 @@ get_summary_stats <- function(data) {
 )
 }
 
+# Load Data
+
+
 ## Load Count Data
 liver_a_counts <- read.table(file="Project 1/data/liver_a.s.count.txt", sep = "\t", header = T, row.names=1)
 liver_c_counts <- read.table(file="Project 1/data/liver_c.s.count.txt", sep = "\t", header = T, row.names=1)

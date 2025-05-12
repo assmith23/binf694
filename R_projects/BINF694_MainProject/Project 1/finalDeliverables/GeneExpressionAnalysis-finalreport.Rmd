@@ -1,12 +1,13 @@
 ---
-title: "Gene Expression Signatures Underlying Specialized Filtration Processes in Human Liver and Stomach"
-subtitle: "BINF694 - Gene Expression Final Report"
+title: Gene Expression Signatures Underlying Specialized Filtration Processes in Human
+  Liver and Stomach
 author: "A Manning Smith"
 date: "May 16, 2025"
 output:
-  #html_document: default
-  #pdf_document: default
-  github_document: default
+  html_document:
+    df_print: paged
+  pdf_document: default
+subtitle: "BINF694 - Gene Expression Final Report"
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -25,6 +26,7 @@ library(TissueEnrich)
 library(tidyverse)
 library(biomaRt)
 library(writexl)
+library(png)
 ```
 
 ```{r body, message=FALSE, warning=FALSE, include=FALSE}
@@ -86,6 +88,7 @@ vsd <- vst(dds, blind=FALSE)
 # Abstract
 The human liver and stomach represent two distinct filtering systems with complementary functions in the body. While the liver filters blood and performs metabolic detoxification, the stomach filters ingested materials through physical and chemical processes. This study aimed to characterize the transcriptomic differences between these organs to better understand their specialized functions. RNA-sequencing was performed on three biological replicates each of human liver and stomach tissues. Following quality assessment, adapter trimming, and alignment to the human reference genome (GRCh38), differential gene expression analysis was conducted using DESeq2. Principal component analysis revealed extreme separation along PC1 (explaining 95% of variance), confirming fundamentally different expression profiles between tissues. Top differentially expressed genes included liver-specific markers involved in detoxification pathways (ALB, SERPINC1, CYP enzymes) and stomach-specific genes related to mucosal protection (MUC5AC, GKN1, TFF1). Hierarchical clustering demonstrated two distinct gene expression patterns with minimal overlap between tissues. These findings support our hypothesis that liver and stomach tissues exhibit distinctive transcriptomic signatures reflecting their specialized filtering functions, with liver expressing higher levels of detoxification and metabolic pathway genes, while stomach shows elevated expression of genes related to acid production, mucus secretion, and digestive processes.
 
+\newpage
 # Introduction
 The human body is comprised of diverse organs with specialized functions that are ultimately reflected in their gene expression profiles. Of these, the liver and stomach represent two distinct but complementary filtering systems that process what enters the body. Transcriptomic analysis allows us to see these underling specialized functions at the genomic level.
 
@@ -98,6 +101,7 @@ This hypothesizes that the liver and stomach will show differentially expressed 
 ## Hypothesis
 The liver and stomach will show differentially expressed gene patterns reflecting their specialized filtering functions. The liver will express higher levels of detoxification and metabolic pathway genes; while the stomach will show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes.
 
+\newpage
 # Methods
 Three biological replicates each of human liver (samples a, c, and d) and stomach (samples 1a, 2a, and 3b) tissues were selected for comparative transcriptomic analysis. The analysis aimed to test the hypothesis that liver and stomach tissues would show differentially expressed gene patterns reflecting their specialized filtering functions, with the liver expressing higher levels of detoxification and metabolic pathway genes, while the stomach would show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes.
 
@@ -114,29 +118,38 @@ Similar to the liver tissues, two stomach samples (1a and 2a) showed satisfactor
 
 
 ## Trimming
+After it was determined that we can proceed with further analysis of the provided samples, FastQC was utilized to trim the samples. 
+
+**Parameters:**
+- MIN_LEN=40; the minimum sequence length
+- MIN_QUAL=28; the minimum quality score threshold
+
+These parameters were selected to ensure that the trimmed sequences would meet the quality standards for downstream analysis.
+
 ```{r tab1_trimmingData, echo=FALSE}
 trim_df <- read.csv("~/Documents/binf694/R_projects/BINF694_MainProject/Project 1/data/trimming_results.csv", header=TRUE)
 kable(trim_df, caption = "Trimming Results | Table 1")
 ```
-After it was determined that we can proceed with further analysis of the provided samples, FastQC was utilized to trim the samples. The samples were filtered on a minimum read length of 40 and a quality score of 28. This will allow us to retain the sequences meeting our quality threshold.
 
 As expected, liver_d and stomach_3b had the highest proportion of sequences filtered out during this step, consistent with their lower initial quality metrics.
 
 ## Mapping
+The trimmed sequences were then aligned to the human genome (GRCh38) using STAR version 2.7.11b. The mapping results were evaluated to assess the quality of the alignment and the overall mapping rate. SAMtools version 1.19.2 was then used to create the .bam files that will be used for counting.
+
 ```{r tab2_mappingData, echo=FALSE}
 map_df <- read.csv("~/Documents/binf694/R_projects/BINF694_MainProject/Project 1/data/mapping_results.csv", header=TRUE)
 kable(map_df, caption = "Mapping Results | Table 2")
 ```
-Using the filtered sequences, STAR version 2.7.11b was utilized to align the sequences in the genome. The results from the mapping were not concerning. Overall, there was a higher mismatch rate for the stomach tissue samples. The may also be some quality issues with stomach_3b as the mapping rate of about 77.5% is pretty low. This may indicate some contamination in the sample as well as the multi mapping rate was much higher than the other tissue samples.
 
-SAMtools version 1.19.2 was then used to create the .bam files that will be used for counting.
+The results from the mapping were not concerning. Overall, there was a higher mismatch rate for the stomach tissue samples. The may also be some quality issues with stomach_3b as the mapping rate of about 77.5% is pretty low. This may indicate some contamination in the sample as well as the multi mapping rate was much higher than the other tissue samples.
 
 ## Genome Visulization
 Integrative Genomics Viewer (IGV) version 2.8.0 was used to visualize read alignments for genes of interest, allowing for inspection of exon coverage patterns and verification of expression differences between liver and stomach tissues.
 
 ## Read Counting
-HTSeq version 0.11.2 was used to count the 6 sorted and aligned .bam file provided by trimming and mapping.
+The next step was to count the reads from the aligned .bam files. The featureCounts function from HTSeq version 0.11.2 was used to count the 6 sorted and aligned .bam file provided by trimming and mapping. The reference annotation file used was, human genome GRCh38 GRCh38.p14-ensembl.
 
+The featureCounts function was run with the following parameters:
 **Paramaters:**
 ```
 mode intersection-nonempty
@@ -147,7 +160,7 @@ idattr gene_name
 ```
 
 ## Differential Expression Analysis
-Differential expression analysis was performed using DESeq2 version 1.38.0 in R version 4.2.0.
+Differential expression analysis was performed using DESeq2 version 1.48.0 in R version 4.5.0.
 1. Via a created count matrix from the six tissue counts, a DESeqDataSet object was created
 2. Low-count genes (those with fewer than 10 reads across all samples) were filtered out
 3. Results were ordered by adjusted p-value and exported to a tab-delimited file
@@ -163,13 +176,29 @@ Differential expression analysis was performed using DESeq2 version 1.38.0 in R 
 Additionally, selected marker genes from various research publications were analyzed separately and visualized in a heatmap with row-based scaling to highlight expression patterns.
 
 ### Pathway / GO enrichment
+To understand the biological significance of differentially expressed genes between liver and stomach tissues, we performed functional enrichment analysis using the Database for Annotation, Visualization, and Integrated Discovery (DAVID) 2021. The analysis was conducted on the top 400 differentially expressed genes, which were selected based on their adjusted p-value and log2 fold change.
 
+The enrichment analysis included Gene Ontology (GO) terms for biological processes, cellular components, and molecular functions, as well as KEGG pathways and InterPro domains. The results were visualized using bar plots to highlight the most significantly enriched terms.
 
+Further enrichment analysis was performed on the top 250 differentially expressed genes for each tissue type, as well as a pre-defined list of important genes related to liver and stomach functions. This analysis aimed to identify specific pathways and functions associated with each tissue type. Lastly, the results were compared to the top 50 differentially expressed genes to identify any commonalities or differences in enrichment patterns.
+
+### Network Analysis
+Claude 3.7 Sonnet[https://claude.ai/share/40403cb7-b1b9-4c7c-8939-ea95407bc21b]
+
+To understand the functional relationships and biological context of differentially expressed genes between liver and stomach tissues, we performed protein interaction network analysis. Utilizing the top 50 differentially expressed genes we can construct a network of protein-protein interactions (PPIs) to visualize the complex relationships between these genes. This approach allows us to identify key regulatory hubs, functional modules, and potential pathway connections that may not be apparent from gene lists alone. Our network analysis strategy employed both the STRING database for initial interaction mapping and Cytoscape for advanced visualization and topological analysis, as detailed in the following sections.
+
+#### STRING
+Protein-protein interaction networks for the top 50 differentially expressed genes were constructed using STRING database v12.0 (https://string-db.org). The top 50 DE genes (25 liver-specific, 25 stomach-specific) were searched with both a minimum required interaction score of $0.400$ and a high minimum required interaction score of $0.700$.
+
+#### Cytoscape
+Cytoscape v3.9.1 was used to visualize the protein-protein interaction networks generated from STRING. The networks were imported into Cytoscape, and various layout algorithms were applied to optimize the visualization of interactions. The networks were then annotated with gene names, fold changes, and p-values to highlight the most significant interactions.
+Network visualizations were exported as both vector format images and Cytoscape session files.
+
+\newpage
 # Results
 
 ## Sample Relationship
-
-The Principle component analysis (PCA) plot provides a dimensionality reduction visualization of the RNA-seq data after variance stabilizing transformation.
+The first step in the analysis was to visualize the relationships between the samples using PCA and a heatmap. The Principle component analysis (PCA) plot shows the distribution of samples in a two-dimensional space based on their gene expression profiles. The samples are colored by tissue type (liver or stomach), allowing for easy identification of clustering patterns.
 
 ```{r fig1_pca, echo=FALSE, fig.height=3, fig.width=6.5, message=FALSE, warning=FALSE}
 ## PCA Plot
@@ -417,6 +446,23 @@ In contrast to liver tissue, stomach-specific genes showed enrichment in biologi
 
 In conclusion, these enrichment analysis results provide compelling evidence supporting our hypothesis. The liver's transcriptomic profile reveals a sophisticated blood and chemical filtering system, with highlighted expression of genes involved in detoxification, protein processing, lipid metabolism, and hemostasis. In contrast, the stomach's gene expression pattern reflects its specialized role in food processing through acid production, mucus secretion, and initial digestive functions. These distinct molecular signatures underscore the specialized nature of these organs' filtering mechanisms, validating our initial hypothesis about their functional differentiation.
 
+### Network Analysis
+```{r fig10_network, echo=FALSE, fig.height=10, fig.width=8, message=FALSE, warning=FALSE}
+setwd("~/Documents/binf694/R_projects/BINF694_MainProject")
+knitr::include_graphics("Project 1/finalDeliverables/results/string_normal_image400.png")
+```
+
+There are several key observations from the network analysis. Firstly, the network has a highly interconnected cluster with a large amount of blood proteins, aligning with that of the liver's filtering function. This cluster includes genes such as APOH, SERPIND1, and F2, which are involved in blood coagulation and detoxification processes. The presence of these genes in the network highlights the liver's role in maintaining blood homeostasis and detoxifying harmful substances. These result are similar to that of the enrichment analysis as GO:0007596~blood coagulation presented as the most significant biological process in our top 400 differentially expressed genes.
+
+Another functional module identified in the network is the alcohol dehydrogenase family identified by genes: ADH4, ADH6, ADH1A all contributing to alcohol metabolism. This module is particularly relevant to the liver's detoxification function, as it plays a crucial role in metabolizing alcohol and other xenobiotics. The presence of these genes in the network further supports the liver's specialized filtering role in processing and detoxifying various substances.
+
+**Verify**
+Edge coloring indicates multiple lines of evidence supporting these interactions, with many connections validated by experimental data (magenta edges) and database annotations (blue edges).
+
+
+
+
+\newpage
 # Discussion
 This study set out to test the hypothesis that liver and stomach tissues would show differentially expressed gene patterns reflecting their specialized filtering functions, with the liver expressing higher levels of detoxification and metabolic pathway genes, while the stomach would show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes. Our transcriptomic analysis has revealed distinct molecular signatures that strongly support this hypothesis and provide novel insights into the specialized filtering mechanisms of these organs.
 
@@ -435,9 +481,12 @@ Claude 3.7 Sonnet[https://claude.ai/share/883da6f3-b64f-428b-8a11-4c270111f1e7]
 
 Several promising directions emerge from this study. First, expanding the analysis to include additional filtering organs—such as kidneys and lungs—would provide a more comprehensive understanding of specialized filtering mechanisms across the body.
 
-# Conclusion
-
 # References
+
+B.T. Sherman, M. Hao, J. Qiu, X. Jiao, M.W. Baseler, H.C. Lane, T. Imamichi and W. Chang. DAVID: a web server for functional enrichment analysis and functional annotation of gene lists (2021 update). Nucleic Acids Research. 23 March 2022. doi:10.1093/nar/gkac194.
+
+Huang DW, Sherman BT, Lempicki RA. Systematic and integrative analysis of large gene lists using DAVID Bioinformatics Resources. Nature Protoc. 2009;4(1):44-57.
+
 Gattu, A. K., Swenson, E. S., Iwakiri, Y., Samuel, V. T., Troiano, N., Berry, R., Church, C. D., Rodeheffer, M. S., Carpenter, T. O., & Chung, C. (2013). Determination of mesenchymal stem cell fate by pigment epithelium-derived factor (PEDF) results in increased adiposity and reduced bone mineral content. FASEB journal : official publication of the Federation of American Societies for Experimental Biology, 27(11), 4384–4394. https://doi.org/10.1096/fj.13-232900
 
 Mills, J. C., & Shivdasani, R. A. (2011). Gastric epithelial stem cells. Gastroenterology, 140(2), 412–424. https://doi.org/10.1053/j.gastro.2010.12.001
