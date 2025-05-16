@@ -4,11 +4,14 @@ title: Gene Expression Signatures Underlying Specialized Filtration Processes in
 author: "A Manning Smith"
 date: "May 16, 2025"
 output:
-  pdf_document: default
+  html_document:
+    toc: true
+    df_print: paged
   bookdown::html_document2:
     number_sections: false
     toc: true
     toc_float: true
+  pdf_document: default
 subtitle: "BINF694 - Gene Expression Final Report"
 ---
 ```{r setup, include=FALSE}
