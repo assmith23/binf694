@@ -90,11 +90,11 @@ vsd <- vst(dds, blind=FALSE)
 ```
 
 # Abstract
-The human liver and stomach represent two distinct filtering systems with complementary functions in the body. While the liver filters blood and performs metabolic detoxification, the stomach filters ingested materials through physical and chemical processes. This study aimed to characterize the differences between these organs to better understand their specialized functions. RNA-sequencing results were utilized from three biological replicates of each human liver and stomach tissues. Following quality assessment, adapter trimming, and alignment to the human reference genome (GRCh38.p14-ensembl), differential gene expression analysis was conducted using DESeq2. Principal component analysis revealed extreme separation along PC1 (explaining 95% of variance), confirming fundamentally different expression profiles between tissues. The top differentially expressed genes included liver-specific markers involved in detoxification pathways (ALB, SERPINC1, CYP family) and stomach-specific genes related to mucosal protection (MUC5AC, GKN1, TFF1). Hierarchical clustering demonstrated two distinct gene expression patterns with minimal overlap between tissues. These findings support our hypothesis that liver and stomach tissues exhibit distinctive transcriptomic signatures reflecting their specialized filtering functions, with liver expressing higher levels of detoxification and metabolic pathway genes, while stomach shows elevated expression of genes related to acid production, mucus secretion, and digestive processes.
+The human liver and stomach represent two distinct filtering systems with complementary functions in the body. While the liver filters blood and performs metabolic detoxification, the stomach filters ingested materials through physical and chemical processes. This study aimed to characterize the differences between these organs to better understand their specialized functions. RNA-sequencing results were utilized from three biological replicates of each human liver and stomach tissues. Following quality assessment, adapter trimming, and alignment to the human reference genome (GRCh38.p14-ensembl), differential gene expression analysis was conducted using DESeq2. Principal component analysis revealed extreme separation along PC1 (explaining 95% of variance), confirming fundamentally different expression profiles between tissues. The top differentially expressed genes included liver-specific markers involved in detoxification pathways (ALB, SERPINC1, CYP family) and stomach-specific genes related to mucosal protection (MUC5AC, GKN1, TFF1). Hierarchical clustering demonstrated two distinct gene expression patterns with minimal overlap between tissues. These findings support our hypothesis that liver and stomach tissues exhibit distinctive gene analysis signatures reflecting their specialized filtering functions, with liver expressing higher levels of detoxification and metabolic pathway genes, while stomach shows elevated expression of genes related to acid production, mucus secretion, and digestive processes.
 
 ## AI Aknowledgement
 
-This research utilized Claude 3.7 Sonnet, a large language model developed by Anthropic. Claude was prompted with the initial parameters of the research including the Abstract, hypothesis, and Results. Claude assisted in adding visualization recommendations, and was used as a tool to debug code. As a powerful language model, Claude assisted in manuscript structuring and text synthesization, acting as an editor to written text and synthesized complex information into coherent text narratives.
+This research utilized Claude 3.7 Sonnet, a large language model developed by Anthropic. Claude was prompted with the initial parameters of the research including the Abstract, Hypothesis, and Results. Claude assisted in adding visualization recommendations, and was used as a tool to debug code. As a powerful language model, Claude assisted in manuscript structuring and text synthesization, acting as an editor to written text and synthesized complex information into coherent text narratives; these narratives were not directly utilized but provided input into the written text via the author's own interpretation.
 
 The author carefully reviewed and validated all AI contributions to ensure scientific accuracy. All analyses, interpretations, and conclusions represent the author's independent judgment and responsibility.
 
@@ -106,7 +106,7 @@ The liver serves as the body's primary detoxification center, filtering blood. I
 
 In contrast, the stomach functions as the initial filtering station for ingested materials. It specializes in mucus secretion and digestive functions. The GKN family (GKN1, GKN2) are expressed in gastric epithelium cells [**(Yoshikawa 2000)**](#Yosh2000). Digestive enzyme genes (PGC, LIPF) contribute to the primary digestive function. The gastric mucosa is protected from autodigestion by a specialized mucus layer, with MUC5AC being a predominant mucin that shields epithelial cells from the harsh acidic environment [**(Song S 2011)**](#Song2011_2).
 
-With this we can hypothesizes that the liver and stomach will show differentially expressed gene patterns reflecting their specialized filtering functions, with the liver expressing higher levels of detoxification and metabolic pathway genes, while the stomach will show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes. Through RNA-sequencing analysis of three biological replicates from each tissue, we aim to characterize these distinct transcriptomic signatures and identify the key molecular pathways that distinguish these filtering organs.
+With this we can hypothesizes that the liver and stomach will show differentially expressed gene patterns reflecting their specialized filtering functions, with the liver expressing higher levels of detoxification and metabolic pathway genes, while the stomach will show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes. Through RNA-sequencing analysis of three biological replicates from each tissue, we aim to characterize these distinct signatures and identify the key molecular pathways that distinguish these filtering organs.
 
 ## Hypothesis
 The liver and stomach will show differentially expressed gene patterns reflecting their specialized filtering functions. The liver will express higher levels of detoxification and metabolic pathway genes; while the stomach will show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes.
@@ -115,7 +115,7 @@ The liver and stomach will show differentially expressed gene patterns reflectin
 # Methods
 Three biological replicates each of human liver (samples a, c, and d) and stomach (samples 1a, 2a, and 3b) tissues were selected for comparative gene expression analysis. The analysis aimed to test our hypothesis that liver and stomach tissues would show differentially expressed gene patterns reflecting their specialized filtering functions, with the liver expressing higher levels of detoxification and metabolic pathway genes, while the stomach would show elevated expression of genes related to acid production, mucus secretion, and initial digestive processes.
 
-[Claude 3.7 Sonnet - AI Reference](https://claude.ai/share/5142901c-bf60-4d6b-a944-a95c549ac000)
+[**Claude 3.7 Sonnet - AI Reference**](https://claude.ai/share/5142901c-bf60-4d6b-a944-a95c549ac000)
 
 ## Qualitiy Control
 The first step was to perform quality control analysis on the 6 tissue samples using FastQC. The selected samples were analyzed using version 0.11.9 of FastQC. Quality metrics including per base sequence quality, per sequence quality scores, sequence duplication levels, adapter content, and k-mer content were evaluated.
@@ -197,13 +197,13 @@ The enrichment analysis included Gene Ontology (GO) terms for biological process
 Further enrichment analysis was performed on the top 250 differentially expressed genes for each tissue type, as well as a pre-defined list of important genes related to liver and stomach functions. This analysis aimed to identify specific pathways and functions associated with each tissue type. Lastly, the results were compared to the top 50 differentially expressed genes to identify any commonalities or differences in enrichment patterns.
 
 ### Network Analysis
-[Claude 3.7 Sonnet](https://claude.ai/share/40403cb7-b1b9-4c7c-8939-ea95407bc21b)
+[**Claude 3.7 Sonnet**](https://claude.ai/share/40403cb7-b1b9-4c7c-8939-ea95407bc21b)
 
 To understand the functional relationships and biological context of differentially expressed genes between liver and stomach tissues, we performed protein interaction network analysis. Utilizing the top 50 differentially expressed genes we can construct a network of protein-protein interactions (PPIs) to visualize the complex relationships between these genes. This approach allows us to identify key regulatory hubs, functional modules, and potential pathway connections that may not be apparent from gene lists alone. Our network analysis strategy employed both the STRING database for initial interaction mapping and Cytoscape for advanced visualization and topological analysis, as detailed in the following sections.
 
 #### STRING
 
-Protein-protein interaction networks for the top 50 differentially expressed genes were constructed using [STRING database v12.0](https://string-db.org). The top 50 DE genes were searched with both a minimum required interaction score of $0.400$ and a high minimum required interaction score of $0.700$.
+Protein-protein interaction networks for the top 50 differentially expressed genes were constructed using [**STRING database v12.0**](https://string-db.org). The top 50 DE genes were searched with both a minimum required interaction score of $0.400$ and a high minimum required interaction score of $0.700$.
 
 #### Cytoscape
 
@@ -357,7 +357,7 @@ Our enrichment analysis results showed a predominance of liver-related pathways.
 ## Future Direction
 Several promising directions emerge from this study. First, expanding the analysis to include additional filtering organs—such as kidneys and lungs—would provide a more comprehensive understanding of specialized filtering mechanisms across the body. This could help identify commonalities and differences in gene expression patterns and functional pathways among these organs.
 
-As a brainstorming start to this furthered research, [Claude 3.7 Sonnet - AI Brainstorming](https://claude.ai/share/883da6f3-b64f-428b-8a11-4c270111f1e7) provide some areas of focus with some reference to existing research.
+As a brainstorming start to this furthered research, [**Claude 3.7 Sonnet - AI Brainstorming**](https://claude.ai/share/883da6f3-b64f-428b-8a11-4c270111f1e7) provide some areas of focus with some reference to existing research.
 
 As referenced, [**(Satta 2022)**](#satta2022), there is a link between physiology and pathology in the kidney and lung. This could be a promising area of research to explore the relationship between filtering organs and their roles in disease processes. By comparing gene expression patterns between these organs, we may gain a deeper understanding of their complementary functions in maintaining homeostasis.
 
@@ -403,21 +403,14 @@ Support from the University of Delaware Bioinformatics Data Science Core Facilit
 \newpage
 # Supportting Code & Resources
 
-## Pre-Selected Gene List
-
-<div id="table3"></div>
-
-```{r print_gene_list, echo=FALSE}
-gene_info <- gene_info %>% filter(gene_info$filter_selection == "YES")
-kable(gene_info[0:3], caption = "Pre-Selected Gene List | Table 3")
-```
-
-\newpage
 ## Github Project
-The complete project results and supporting code can be found [linked here at github](https://github.com/assmith23/Gene-Expression-of-Filtration-Process-in-Human-Liver-and-Stomach/tree/main).
+The complete project results and supporting code can be found [**linked here at github**](https://github.com/assmith23/Gene-Expression-of-Filtration-Process-in-Human-Liver-and-Stomach/tree/main).
+
+### Data Files
+- The complete differentially expression analysis results can be found [**linked here in the github project**](https://github.com/assmith23/Gene-Expression-of-Filtration-Process-in-Human-Liver-and-Stomach/blob/main/differentialExpressionAnalysis_results.xlsx).
 
 ## Scripts
-The end to end script can be [referenced here at the github project](https://github.com/assmith23/Gene-Expression-of-Filtration-Process-in-Human-Liver-and-Stomach/blob/main/end2end.R).
+The end to end script can be [**referenced here at the github project**](https://github.com/assmith23/Gene-Expression-of-Filtration-Process-in-Human-Liver-and-Stomach/blob/main/end2end.R).
 
 ## R Packages and Versions
 - DESeq2 | Version 1.48.0
@@ -455,6 +448,16 @@ The end to end script can be [referenced here at the github project](https://git
 ## Other Tools
 - Cytoscape | Version 3.10.3
   - MCODE | Version 2.0.3
+  
+\newpage
+## Pre-Selected Gene List
+
+<div id="table3"></div>
+
+```{r print_gene_list, echo=FALSE}
+gene_info <- gene_info %>% filter(gene_info$filter_selection == "YES")
+kable(gene_info[0:3], caption = "Pre-Selected Gene List | Table 3")
+```
 
 \newpage
 # Figures
