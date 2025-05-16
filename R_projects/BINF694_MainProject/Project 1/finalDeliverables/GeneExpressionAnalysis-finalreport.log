@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.5.14)  14 MAY 2025 17:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.5.14)  16 MAY 2025 17:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -569,186 +569,192 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 ) [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texmf/fonts/enc/
-dvips/lm/lm-ec.enc}] [2]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 219.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 219.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 219.
+dvips/lm/lm-ec.enc}]
+
+LaTeX Warning: Hyper reference `Rui2014' on page 2 undefined on input line 193.
+
+
+[2]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
-51.
+72.
 (/usr/share/texmf/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [3]
-Underfull \hbox (badness 10000) in paragraph at lines 376--379
+Underfull \hbox (badness 10000) in paragraph at lines 397--400
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 379--382
+Underfull \hbox (badness 10000) in paragraph at lines 400--403
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 382--384
+Underfull \hbox (badness 10000) in paragraph at lines 403--405
 
  []
 
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 3
-92.
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 4
+13.
 (/usr/share/texmf/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [4] [5{/usr/share/texmf/fonts/enc/dvips/lm/lm-ts1.enc}{/usr/share/texmf/fonts
-/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}] [6
-]
-Underfull \hbox (badness 10000) in paragraph at lines 582--593
+) [4]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 480.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 480.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 480.
+[5{/usr/share/texmf/fonts/enc/dvips/lm/lm-ts1.enc}{/usr/share/texmf/fonts/enc/d
+vips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}] [6]
+Underfull \hbox (badness 10000) in paragraph at lines 609--622
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 594--601
+Underfull \hbox (badness 10000) in paragraph at lines 623--630
 
  []
 
-LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 643.
 [7]
-Underfull \hbox (badness 10000) in paragraph at lines 677--678
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 672.
+
+Underfull \hbox (badness 10000) in paragraph at lines 706--707
 
  []
 
 [8{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}]
-Underfull \hbox (badness 10000) in paragraph at lines 772--773
+Underfull \hbox (badness 10000) in paragraph at lines 783--784
 
  []
 
 [9] [10] [11] [12] [13] [14] [15] [16]
-<GeneExpressionAnalysis-finalreport_files/figure-latex/fig1_pca-1.pdf, id=192, 
+<GeneExpressionAnalysis-finalreport_files/figure-latex/fig1_pca-1.pdf, id=201, 
 453.695pt x 125.46875pt>
 File: GeneExpressionAnalysis-finalreport_files/figure-latex/fig1_pca-1.pdf Grap
 hic file (type pdf)
 <use GeneExpressionAnalysis-finalreport_files/figure-latex/fig1_pca-1.pdf>
 Package pdftex.def Info: GeneExpressionAnalysis-finalreport_files/figure-latex/
-fig1_pca-1.pdf  used on input line 1265.
+fig1_pca-1.pdf  used on input line 1293.
 (pdftex.def)             Requested size: 453.6939pt x 125.46843pt.
-<GeneExpressionAnalysis-finalreport_files/figure-latex/fig2_heatmap-1.pdf, id=1
-93, 464.73625pt x 352.31625pt>
+<GeneExpressionAnalysis-finalreport_files/figure-latex/fig2_heatmap-1.pdf, id=2
+02, 464.73625pt x 352.31625pt>
 File: GeneExpressionAnalysis-finalreport_files/figure-latex/fig2_heatmap-1.pdf 
 Graphic file (type pdf)
 <use GeneExpressionAnalysis-finalreport_files/figure-latex/fig2_heatmap-1.pdf>
 Package pdftex.def Info: GeneExpressionAnalysis-finalreport_files/figure-latex/
-fig2_heatmap-1.pdf  used on input line 1269.
+fig2_heatmap-1.pdf  used on input line 1297.
 (pdftex.def)             Requested size: 464.7351pt x 352.31538pt.
 <GeneExpressionAnalysis-finalreport_files/figure-latex/fig3_geneHeatmap-1.pdf, 
-id=194, 464.73625pt x 641.39626pt>
+id=203, 464.73625pt x 641.39626pt>
 File: GeneExpressionAnalysis-finalreport_files/figure-latex/fig3_geneHeatmap-1.
 pdf Graphic file (type pdf)
 <use GeneExpressionAnalysis-finalreport_files/figure-latex/fig3_geneHeatmap-1.p
 df>
 Package pdftex.def Info: GeneExpressionAnalysis-finalreport_files/figure-latex/
-fig3_geneHeatmap-1.pdf  used on input line 1273.
+fig3_geneHeatmap-1.pdf  used on input line 1301.
 (pdftex.def)             Requested size: 464.74928pt x 641.41425pt.
 [17 <./GeneExpressionAnalysis-finalreport_files/figure-latex/fig1_pca-1.pdf> <.
 /GeneExpressionAnalysis-finalreport_files/figure-latex/fig2_heatmap-1.pdf>]
 <GeneExpressionAnalysis-finalreport_files/figure-latex/fig4_geneHeatmap2-1.pdf,
- id=216, 464.73625pt x 641.39626pt>
+ id=225, 464.73625pt x 641.39626pt>
 File: GeneExpressionAnalysis-finalreport_files/figure-latex/fig4_geneHeatmap2-1
 .pdf Graphic file (type pdf)
 <use GeneExpressionAnalysis-finalreport_files/figure-latex/fig4_geneHeatmap2-1.
 pdf>
 Package pdftex.def Info: GeneExpressionAnalysis-finalreport_files/figure-latex/
-fig4_geneHeatmap2-1.pdf  used on input line 1277.
+fig4_geneHeatmap2-1.pdf  used on input line 1305.
 (pdftex.def)             Requested size: 464.74928pt x 641.41425pt.
 [18 <./GeneExpressionAnalysis-finalreport_files/figure-latex/fig3_geneHeatmap-1
 .pdf>]
 <GeneExpressionAnalysis-finalreport_files/figure-latex/fig5_geneHeatmap3-1.pdf,
- id=229, 464.73625pt x 641.39626pt>
+ id=238, 464.73625pt x 641.39626pt>
 File: GeneExpressionAnalysis-finalreport_files/figure-latex/fig5_geneHeatmap3-1
 .pdf Graphic file (type pdf)
 <use GeneExpressionAnalysis-finalreport_files/figure-latex/fig5_geneHeatmap3-1.
 pdf>
 Package pdftex.def Info: GeneExpressionAnalysis-finalreport_files/figure-latex/
-fig5_geneHeatmap3-1.pdf  used on input line 1281.
+fig5_geneHeatmap3-1.pdf  used on input line 1309.
 (pdftex.def)             Requested size: 464.74928pt x 641.41425pt.
 [19 <./GeneExpressionAnalysis-finalreport_files/figure-latex/fig4_geneHeatmap2-
 1.pdf>]
 <GeneExpressionAnalysis-finalreport_files/figure-latex/fig6_enrichBP-1.pdf, id=
-243, 568.1225pt x 277.035pt>
+252, 568.1225pt x 277.035pt>
 File: GeneExpressionAnalysis-finalreport_files/figure-latex/fig6_enrichBP-1.pdf
  Graphic file (type pdf)
 <use GeneExpressionAnalysis-finalreport_files/figure-latex/fig6_enrichBP-1.pdf>
 
 Package pdftex.def Info: GeneExpressionAnalysis-finalreport_files/figure-latex/
-fig6_enrichBP-1.pdf  used on input line 1285.
+fig6_enrichBP-1.pdf  used on input line 1313.
 (pdftex.def)             Requested size: 469.7731pt x 229.07663pt.
 [20 <./GeneExpressionAnalysis-finalreport_files/figure-latex/fig5_geneHeatmap3-
 1.pdf>]
 <GeneExpressionAnalysis-finalreport_files/figure-latex/fig7_enrichCC-1.pdf, id=
-256, 568.1225pt x 277.035pt>
+265, 568.1225pt x 277.035pt>
 File: GeneExpressionAnalysis-finalreport_files/figure-latex/fig7_enrichCC-1.pdf
  Graphic file (type pdf)
 <use GeneExpressionAnalysis-finalreport_files/figure-latex/fig7_enrichCC-1.pdf>
 
 Package pdftex.def Info: GeneExpressionAnalysis-finalreport_files/figure-latex/
-fig7_enrichCC-1.pdf  used on input line 1289.
+fig7_enrichCC-1.pdf  used on input line 1317.
 (pdftex.def)             Requested size: 469.7731pt x 229.07663pt.
 <GeneExpressionAnalysis-finalreport_files/figure-latex/fig8_enrichMF-1.pdf, id=
-257, 568.1225pt x 277.035pt>
+266, 568.1225pt x 277.035pt>
 File: GeneExpressionAnalysis-finalreport_files/figure-latex/fig8_enrichMF-1.pdf
  Graphic file (type pdf)
 <use GeneExpressionAnalysis-finalreport_files/figure-latex/fig8_enrichMF-1.pdf>
 
 Package pdftex.def Info: GeneExpressionAnalysis-finalreport_files/figure-latex/
-fig8_enrichMF-1.pdf  used on input line 1293.
+fig8_enrichMF-1.pdf  used on input line 1321.
 (pdftex.def)             Requested size: 469.7731pt x 229.07663pt.
 [21 <./GeneExpressionAnalysis-finalreport_files/figure-latex/fig6_enrichBP-1.pd
 f> <./GeneExpressionAnalysis-finalreport_files/figure-latex/fig7_enrichCC-1.pdf
 >]
 <GeneExpressionAnalysis-finalreport_files/figure-latex/fig9_enrichKEGG-1.pdf, i
-d=277, 568.1225pt x 277.035pt>
+d=286, 568.1225pt x 277.035pt>
 File: GeneExpressionAnalysis-finalreport_files/figure-latex/fig9_enrichKEGG-1.p
 df Graphic file (type pdf)
 <use GeneExpressionAnalysis-finalreport_files/figure-latex/fig9_enrichKEGG-1.pd
 f>
 Package pdftex.def Info: GeneExpressionAnalysis-finalreport_files/figure-latex/
-fig9_enrichKEGG-1.pdf  used on input line 1297.
+fig9_enrichKEGG-1.pdf  used on input line 1325.
 (pdftex.def)             Requested size: 469.7731pt x 229.07663pt.
 <GeneExpressionAnalysis-finalreport_files/figure-latex/fig10_enrichInterpro-1.p
-df, id=278, 568.1225pt x 277.035pt>
+df, id=287, 568.1225pt x 277.035pt>
 File: GeneExpressionAnalysis-finalreport_files/figure-latex/fig10_enrichInterpr
 o-1.pdf Graphic file (type pdf)
 <use GeneExpressionAnalysis-finalreport_files/figure-latex/fig10_enrichInterpro
 -1.pdf>
 Package pdftex.def Info: GeneExpressionAnalysis-finalreport_files/figure-latex/
-fig10_enrichInterpro-1.pdf  used on input line 1301.
+fig10_enrichInterpro-1.pdf  used on input line 1329.
 (pdftex.def)             Requested size: 469.7731pt x 229.07663pt.
-<results/figures/string_normal_image400.png, id=279, 816.04875pt x 785.18344pt>
+<results/figures/string_normal_image400.png, id=288, 816.04875pt x 785.18344pt>
 
 File: results/figures/string_normal_image400.png Graphic file (type png)
 <use results/figures/string_normal_image400.png>
 Package pdftex.def Info: results/figures/string_normal_image400.png  used on in
-put line 1307.
+put line 1335.
 (pdftex.def)             Requested size: 469.75983pt x 451.99216pt.
 [22 <./GeneExpressionAnalysis-finalreport_files/figure-latex/fig8_enrichMF-1.pd
 f> <./GeneExpressionAnalysis-finalreport_files/figure-latex/fig9_enrichKEGG-1.p
 df>]
-<results/figures/tissueResults.png, id=299, 1034.86626pt x 702.625pt>
+<results/figures/tissueResults.png, id=308, 1034.86626pt x 702.625pt>
 File: results/figures/tissueResults.png Graphic file (type png)
 <use results/figures/tissueResults.png>
 Package pdftex.def Info: results/figures/tissueResults.png  used on input line 
-1315.
+1343.
 (pdftex.def)             Requested size: 469.75952pt x 318.94438pt.
-<results/figures/Cluster1.png, id=300, 1053.9375pt x 672.5125pt>
+<results/figures/Cluster1.png, id=309, 1053.9375pt x 672.5125pt>
 File: results/figures/Cluster1.png Graphic file (type png)
 <use results/figures/Cluster1.png>
-Package pdftex.def Info: results/figures/Cluster1.png  used on input line 1323.
+Package pdftex.def Info: results/figures/Cluster1.png  used on input line 1351.
 
 (pdftex.def)             Requested size: 469.7646pt x 299.75455pt.
-<results/figures/Cluster2.png, id=301, 1053.9375pt x 672.5125pt>
+<results/figures/Cluster2.png, id=310, 1053.9375pt x 672.5125pt>
 File: results/figures/Cluster2.png Graphic file (type png)
 <use results/figures/Cluster2.png>
-Package pdftex.def Info: results/figures/Cluster2.png  used on input line 1331.
+Package pdftex.def Info: results/figures/Cluster2.png  used on input line 1359.
 
 (pdftex.def)             Requested size: 469.7646pt x 299.75455pt.
 [23 <./GeneExpressionAnalysis-finalreport_files/figure-latex/fig10_enrichInterp
@@ -760,15 +766,18 @@ LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
 
+LaTeX Warning: There were undefined references.
+
+
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 14648 strings out of 474222
- 233177 string characters out of 5748733
- 1971975 words of memory out of 5000000
- 36399 multiletter control sequences out of 15000+600000
- 612386 words of font info for 161 fonts, out of 8000000 for 9000
+ 14658 strings out of 474222
+ 233281 string characters out of 5748733
+ 1972975 words of memory out of 5000000
+ 36403 multiletter control sequences out of 15000+600000
+ 612552 words of font info for 163 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  83i,7n,93p,1031b,570s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/ty
@@ -779,11 +788,11 @@ blic/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/share
 msy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf/f
 onts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.
 pfb></usr/share/texmf/fonts/type1/public/lm/lmtti10.pfb>
-Output written on GeneExpressionAnalysis-finalreport.pdf (27 pages, 1105354 byt
+Output written on GeneExpressionAnalysis-finalreport.pdf (27 pages, 1105921 byt
 es).
 PDF statistics:
- 558 PDF objects out of 1000 (max. 8388607)
- 460 compressed objects within 5 object streams
- 110 named destinations out of 1000 (max. 500000)
- 29095 words of extra memory for PDF output out of 29859 (max. 10000000)
+ 570 PDF objects out of 1000 (max. 8388607)
+ 472 compressed objects within 5 object streams
+ 112 named destinations out of 1000 (max. 500000)
+ 29103 words of extra memory for PDF output out of 29859 (max. 10000000)
 
