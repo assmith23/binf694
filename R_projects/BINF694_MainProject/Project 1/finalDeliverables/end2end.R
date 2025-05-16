@@ -187,7 +187,7 @@ pheatmap(top_gene_counts,
          annotation_row=gene_origin,
          cutree_rows = 2,
          gaps_row = 25,
-         main="Differentially Expressed Genes | Figure 4",
+         main="Differentially Expressed Genes by Tissue | Figure 4",
          fontsize_row=8)
 
 ## Figure 5 - Heatmap of Selected Genes
