@@ -4,14 +4,14 @@ title: Gene Expression Signatures Underlying Specialized Filtration Processes in
 author: "A Manning Smith"
 date: "May 16, 2025"
 output:
-  html_document:
-    toc: true
-    df_print: paged
+  pdf_document: default
   bookdown::html_document2:
     number_sections: false
     toc: true
     toc_float: true
-  pdf_document: default
+  html_document:
+    toc: true
+    df_print: paged
 subtitle: "BINF694 - Gene Expression Final Report"
 ---
 ```{r setup, include=FALSE}
@@ -348,10 +348,10 @@ The use of three biological replicates for each tissue type provided statistical
 
 However, several limitations should be acknowledged. Firstly, the quality concerns with liver_d and stomach_3b samples noted in the QC analysis may have introduced some variability in our results. While these samples met the minimum quality thresholds for inclusion, the higher filtering rates during trimming may have affected the detection of low-abundance transcripts. Additional biological replicates or more stringent quality control could strengthen future analyses. 
 
-Secondly, our differential expression analysis focused on the top differentially expressed genes, it is important to consider that other genes with lower fold changes may also play significant roles in liver and stomach functions. Future studies could benefit from a more comprehensive analysis of the entire transcriptome, including low-abundance transcripts and non-coding RNAs. More specifically, further analysis into the stomach tissue samples could lead to more insights into the filtering functions of this organ. By comparing gene expression patterns between these two organs, we may gain a deeper understanding of their complementary functions in maintaining homeostasis.
+Secondly, our differential expression analysis focused on the top differentially expressed genes, it is important to consider that other genes with lower fold changes may also play significant roles in liver and stomach functions. Future studies could benefit from a more comprehensive analysis of the entire genomic profile, including low-abundance transcripts and non-coding RNAs. More specifically, further analysis into the stomach tissue samples could lead to more insights into the filtering functions of this organ. By comparing gene expression patterns between these two organs, we may gain a deeper understanding of their complementary functions in maintaining homeostasis.
 
 ## Differential Expression Analysis
-The differential expression analysis using DESeq2 revealed a clear separation between liver and stomach tissues, with distinct gene expression patterns supporting our hypothesis. The PCA plot and heatmap visualizations confirmed the strong clustering of samples by tissue type, indicating that the liver and stomach have fundamentally different gene expression profiles. The top 400 differentially expressed genes were predominantly liver-specific, with many involved in detoxification pathways, lipid metabolism, and blood protein regulation. In contrast, the stomach-specific genes were primarily associated with mucosal protection and digestive processes. Specifc analysis into stomach specific genes revealed that the stomach tissue samples had less differentially expressed genes overall. This suggests that the stomach may have a more specialized and less diverse set of functions compared to the liver, which is involved in a wide range of metabolic processes.
+The differential expression analysis using DESeq2 revealed a clear separation between liver and stomach tissues, with distinct gene expression patterns supporting our hypothesis. The PCA plot and heatmap visualizations confirmed the strong clustering of samples by tissue type, indicating that the liver and stomach have fundamentally different gene expression profiles. The top 400 differentially expressed genes were predominantly liver-specific, with many involved in detoxification pathways, lipid metabolism, and blood protein regulation. In contrast, the stomach-specific genes were primarily associated with mucosal protection and digestive processes. Specific analysis into stomach specific genes revealed that the stomach tissue samples had less differentially expressed genes overall. This suggests that the stomach may have a more specialized and less diverse set of functions compared to the liver, which is involved in a wide range of metabolic processes.
 
 ## Enrichment Results
 Our enrichment analysis results showed a predominance of liver-related pathways. When we looked specific at the top stomach tissue differentially expressed genes, we could compare results to stomach-specific processes. This asymmetry could reflects the fundamental complexity difference between these two filtering organs. The liver serves as the body's central metabolic hub and primary detoxification center. This is evidenced by the extensive enrichment in pathways including xenobiotic metabolism, complement and coagulation cascades, lipid metabolism, and drug processing. In contrast, the stomach's filtering function is more specialized and focused the metabolic processes related to food digestion and initial processing. The stomach's gene expression profile is primarily centered around acid production, mucus secretion, and digestive enzyme synthesis, which are essential for its role in food processing. These process were not reflected in the enrichment results from the top 400 differentially expressed genes, but were evident in the enrichment analysis of the top 250 stomach related genes.
