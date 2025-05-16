@@ -12,6 +12,11 @@ output:
   html_document:
     toc: true
     df_print: paged
+  github_document:
+    includes:
+      in_header: header.md
+      before_body: doc_prefix.md
+      after_body: doc_suffix.md
 subtitle: "BINF694 - Gene Expression Final Report"
 ---
 ```{r setup, include=FALSE}
